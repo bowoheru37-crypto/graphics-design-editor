@@ -1,0 +1,86 @@
+version: '3.9'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: creativity-mongodb
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - creativity-network
+
+  # Redis Cache
+  redis:
+    image: redis:7.0-alpine
+    container_name: creativity-redis
+    ports:
+      - '6379:6379'
+    networks:
+      - creativity-network
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: creativity-backend
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: mongodb://admin:admin123@mongodb:27017
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - creativity-network
+
+  # Frontend
+  frontend:
+    image: node:18-alpine
+    container_name: creativity-frontend
+    working_dir: /app
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./frontend:/app
+    command: npm run dev
+    environment:
+      REACT_APP_API_URL: http://backend:3000/api
+    depends_on:
+      - backend
+    networks:
+      - creativity-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: creativity-nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - creativity-network
+
+networks:
+  creativity-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
