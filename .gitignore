@@ -1,0 +1,79 @@
+# gitignore for Android Development
+
+# Gradle
+.gradle/
+build/
+*.apk
+*.ap_
+*.aab
+*.aar
+*.zip
+*.tar.gz
+
+# Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ics
+.android/
+
+# Local
+local.properties
+gradle.properties
+
+# OS
+.DS_Store
+Thumbs.db
+.windows
+
+# Build
+*.o
+*.a
+*.so
+*.class
+*.dex
+*.jar
+
+# Backup
+*.bak
+*.swp
+*.swo
+*~
+*.tmp
+
+# Dependencies
+libs/
+.m2/
+node_modules/
+
+# Output
+out/
+*.log
+dist/
+
+# IDE
+.vscode/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Generated
+generated/
+gen/
+
+# Kotlin
+kotlin-js-store/
+kt_compiler_daemon.log
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Release
+release/
+releases/
