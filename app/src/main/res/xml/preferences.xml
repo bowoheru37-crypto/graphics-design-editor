@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Performance Settings -->
+    <PreferenceCategory android:title="Performance">
+        <CheckBoxPreference
+            android:key="hardware_acceleration"
+            android:title="Hardware Acceleration"
+            android:defaultValue="true"
+            android:summary="Enable GPU acceleration for rendering" />
+        <CheckBoxPreference
+            android:key="enable_jank_detection"
+            android:title="Jank Detection"
+            android:defaultValue="true"
+            android:summary="Monitor frame timing" />
+    </PreferenceCategory>
+    
+    <!-- Memory Settings -->
+    <PreferenceCategory android:title="Memory">
+        <EditTextPreference
+            android:key="cache_size_mb"
+            android:title="Cache Size (MB)"
+            android:defaultValue="256"
+            android:inputType="number" />
+    </PreferenceCategory>
+</PreferenceScreen>
