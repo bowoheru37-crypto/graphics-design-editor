@@ -1,14 +1,26 @@
 // ============================================================================
-// AUTH CONTROLLER - Authentication logic
+// AUTH CONTROLLER - Authentication logic (improved: validation, logout, secure checks)
 // ============================================================================
 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import Joi from 'joi';
 import { User } from '../models/User';
 import { v4 as uuidv4 } from 'uuid';
+import { redis } from '../middleware/auth';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const JWT_EXPIRE = '7d';
+const JWT_SECRET = process.env.JWT_SECRET as string;
+const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
+
+if (!JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET not set');
+}
+
+const registerSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).required(),
+  displayName: Joi.string().min(2).max(50).required(),
+});
 
 export class AuthController {
   /**
@@ -16,7 +28,10 @@ export class AuthController {
    */
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const { email, password, displayName } = req.body;
+      const { error, value } = registerSchema.validate(req.body);
+      if (error) return res.status(400).json({ error: error.message });
+
+      const { email, password, displayName } = value;
 
       // Check if user exists
       const existingUser = await User.findOne({ email });
@@ -64,7 +79,9 @@ export class AuthController {
     try {
       const { email, password } = req.body;
 
-      // Find user
+      if (!email || !password) return res.status(400).json({ error: 'Missing credentials' });
+
+      // Find user (include password)
       const user = await User.findOne({ email }).select('+password');
       if (!user) {
         return res.status(401).json({ error: 'Invalid credentials' });
@@ -133,6 +150,28 @@ export class AuthController {
   }
 
   /**
+   * Logout (revoke token)
+   */
+  static async logout(req: Request, res: Response, next: NextFunction) {
+    try {
+      const authHeader = req.headers.authorization;
+      if (!authHeader) return res.status(400).json({ error: 'No token provided' });
+      const token = authHeader.split(' ')[1];
+      const decoded = jwt.decode(token) as { exp?: number } | null;
+      if (!decoded || !decoded.exp) {
+        return res.status(200).json({ success: true });
+      }
+      const ttl = decoded.exp * 1000 - Date.now();
+      if (ttl > 0) {
+        await redis.set(`bl_${token}`, 'revoked', 'PX', ttl);
+      }
+      return res.status(200).json({ success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Get current user
    */
   static async getCurrentUser(
@@ -141,7 +180,7 @@ export class AuthController {
     next: NextFunction
   ) {
     try {
-      const user = await User.findById(req.userId);
+      const user = await User.findById(req.userId).select('-password');
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }

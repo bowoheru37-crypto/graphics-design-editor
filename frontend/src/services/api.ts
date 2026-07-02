@@ -1,5 +1,5 @@
 // ============================================================================
-// API SERVICE - REST API client
+// API SERVICE - REST API client (improved)
 // ============================================================================
 
 import axios, { AxiosInstance, AxiosError } from 'axios';
@@ -22,6 +22,7 @@ class APIService {
     this.client.interceptors.request.use((config) => {
       const token = localStorage.getItem('authToken');
       if (token) {
+        if (!config.headers) config.headers = {};
         config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
@@ -32,8 +33,9 @@ class APIService {
       (response) => response,
       (error: AxiosError) => {
         if (error.response?.status === 401) {
+          // Clear token and redirect to login in a SPA-friendly way
           localStorage.removeItem('authToken');
-          window.location.href = '/login';
+          window.location.replace('/login');
         }
         return Promise.reject(error);
       }
@@ -54,7 +56,15 @@ class APIService {
   }
 
   async logout() {
-    return this.client.post('/auth/logout');
+    // Call server to revoke token and then clean up locally
+    try {
+      await this.client.post('/auth/logout');
+    } catch (e) {
+      // ignore network errors but still clear local session
+    } finally {
+      localStorage.removeItem('authToken');
+      window.location.replace('/login');
+    }
   }
 
   async verifyEmail(token: string) {
@@ -63,8 +73,7 @@ class APIService {
 
   // ========== PROJECT ENDPOINTS ==========
   async getProjects(page = 1, pageSize = 20) {
-    return this.client.get<PaginatedResponse<any>>
-      ('/projects', { params: { page, pageSize } });
+    return this.client.get<PaginatedResponse<any>>('/projects', { params: { page, pageSize } });
   }
 
   async getProject(id: string) {
