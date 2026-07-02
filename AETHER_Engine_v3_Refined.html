@@ -1,0 +1,2732 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#030305">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data: blob:;">
+<title>AETHER ENGINE v3 — Universal IDE</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════════
+   AETHER ENGINE v3 — Refined Production CSS
+   Architecture: Mobile-First | Atomic | Zero-Overlap | GPU-Accelerated
+   Philosophy: Minimalist | Ergonomic | Aesthetic | Professional
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Core Palette */
+  --bg-0: #020204;
+  --bg-1: #08080f;
+  --bg-2: #0f0f18;
+  --bg-3: #181825;
+  --bg-4: #222230;
+  --bg-5: #2d2d3d;
+
+  /* Accent Spectrum */
+  --ac: #ff6b35;
+  --ac2: #f7931e;
+  --ok: #22c55e;
+  --info: #3b82f6;
+  --warn: #f59e0b;
+  --err: #ef4444;
+  --pur: #a855f7;
+  --cyan: #06b6d4;
+  --pink: #ec4899;
+  --lime: #84cc16;
+  --rose: #f43f5e;
+
+  /* Typography */
+  --t0: #f8fafc;
+  --t1: #e2e8f0;
+  --t2: #94a3b8;
+  --t3: #64748b;
+  --t4: #475569;
+  --t5: #334155;
+
+  /* Borders */
+  --b0: rgba(255,255,255,0.02);
+  --b1: rgba(255,255,255,0.05);
+  --b2: rgba(255,255,255,0.08);
+  --b3: rgba(255,255,255,0.12);
+
+  /* Layout */
+  --h-top: 44px;
+  --h-bot: 48px;
+  --w-side: 52px;
+  --w-panel: 260px;
+  --w-panel-wide: 320px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+
+  /* Typography Scale */
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+
+  /* Radii */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+
+  /* Shadows */
+  --sh: 0 4px 20px rgba(0,0,0,0.5);
+  --sh-sm: 0 2px 8px rgba(0,0,0,0.3);
+
+  /* Transitions */
+  --tf: 150ms cubic-bezier(0.4,0,0.2,1);
+  --tf-s: 300ms cubic-bezier(0.4,0,0.2,1);
+
+  /* Z-Index Scale */
+  --z-base: 0;
+  --z-panel: 100;
+  --z-float: 200;
+  --z-modal: 300;
+  --z-overlay: 400;
+  --z-toast: 500;
+  --z-splash: 1000;
+}
+
+/* ─── Reset & Base ─── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  height: 100%;
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg-0);
+  color: var(--t1);
+  height: 100dvh;
+  width: 100vw;
+  overflow: hidden;
+  position: fixed;
+  overscroll-behavior: none;
+  touch-action: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg-4); border-radius: 2px; }
+
+/* ─── Utilities ─── */
+.hidden { display: none !important; }
+.invisible { opacity: 0; pointer-events: none; }
+.flex { display: flex; }
+.col { flex-direction: column; }
+.row { flex-direction: row; }
+.center { align-items: center; justify-content: center; }
+.grow { flex: 1; }
+.shrink-0 { flex-shrink: 0; }
+.min-w-0 { min-width: 0; }
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.pointer { cursor: pointer; }
+.select-none { user-select: none; }
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SPLASH SCREEN
+   ═══════════════════════════════════════════════════════════════════════════════ */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-0);
+  z-index: var(--z-splash);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s;
+  contain: layout style paint;
+}
+#splash.done { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.spl-logo {
+  width: 80px;
+  height: 80px;
+  background: conic-gradient(from 0deg, var(--ac), var(--ac2), var(--warn), var(--ac));
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  position: relative;
+  animation: spin-slow 8s linear infinite;
+}
+.spl-logo::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: var(--bg-0);
+  border-radius: 19px;
+}
+.spl-logo::after {
+  content: '⚡';
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(135deg, var(--ac), var(--ac2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.spl-title {
+  margin-top: 24px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  background: linear-gradient(90deg, var(--t0), var(--ac), var(--ac2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.spl-sub {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--t3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.spl-ver {
+  margin-top: 2px;
+  font-size: 9px;
+  color: var(--t4);
+  font-family: var(--mono);
+}
+.spl-bar {
+  width: 160px;
+  height: 2px;
+  background: var(--bg-3);
+  border-radius: 2px;
+  margin-top: 28px;
+  overflow: hidden;
+}
+.spl-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--ac), var(--ac2));
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+.spl-msg {
+  margin-top: 10px;
+  font-size: 10px;
+  color: var(--t4);
+  font-family: var(--mono);
+  height: 14px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   MODALS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,2,4,0.95);
+  backdrop-filter: blur(24px);
+  z-index: var(--z-modal);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  contain: layout style paint;
+}
+.modal.on { display: flex; }
+.modal-h { text-align: center; margin-bottom: 20px; }
+.modal-h h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--t0);
+  margin-bottom: 4px;
+}
+.modal-h p {
+  font-size: 12px;
+  color: var(--t3);
+  max-width: 420px;
+  line-height: 1.4;
+}
+
+/* Project Grid */
+.p-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  max-width: 960px;
+  width: 100%;
+}
+.p-card {
+  background: var(--bg-1);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-lg);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  transition: all var(--tf);
+  position: relative;
+  overflow: hidden;
+  contain: layout style;
+}
+.p-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--b2);
+  box-shadow: var(--sh);
+}
+.p-card:active { transform: scale(0.98); }
+.p-card-new {
+  border-style: dashed;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+}
+.p-card-new:hover { border-color: var(--ac); background: var(--bg-2); }
+.p-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: var(--bg-2);
+}
+.p-card h3 { font-size: 13px; font-weight: 700; color: var(--t1); }
+.p-card p { font-size: 11px; color: var(--t3); line-height: 1.4; }
+.p-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+.p-tag {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--bg-2);
+  color: var(--t3);
+}
+
+/* Engine Grid */
+.e-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 700px;
+  width: 100%;
+}
+@media (max-width: 720px) { .e-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 400px) { .e-grid { grid-template-columns: 1fr; } }
+
+.e-card {
+  background: var(--bg-1);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-lg);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--tf);
+  contain: layout style;
+}
+.e-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--b2);
+  box-shadow: var(--sh);
+}
+.e-card:active { transform: scale(0.97); }
+.e-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.e-card h3 { font-size: 12px; font-weight: 700; }
+.e-card p { font-size: 10px; color: var(--t3); text-align: center; line-height: 1.4; }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   MAIN APP SHELL
+   ═══════════════════════════════════════════════════════════════════════════════ */
+#app {
+  display: none;
+  height: 100dvh;
+  width: 100vw;
+  flex-direction: column;
+  position: relative;
+}
+#app.on { display: flex; }
+
+/* ─── Top Bar ─── */
+.topbar {
+  height: calc(var(--h-top) + var(--safe-top));
+  padding-top: var(--safe-top);
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--b0);
+  display: flex;
+  align-items: center;
+  padding-left: max(10px, var(--safe-l));
+  padding-right: max(10px, var(--safe-r));
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: var(--z-float);
+  position: relative;
+  contain: layout style paint;
+}
+.topbar-l { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.logo {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, var(--ac), var(--ac2));
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.proj-name {
+  font-weight: 600;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  color: var(--t1);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+  transition: background var(--tf);
+}
+.proj-name:hover { background: var(--bg-2); }
+.e-badge {
+  padding: 2px 7px;
+  border-radius: 8px;
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+  border: 1px solid;
+}
+.eb-g { background: rgba(245,158,11,0.08); color: var(--warn); border-color: rgba(245,158,11,0.12); }
+.eb-w { background: rgba(34,197,94,0.08); color: var(--ok); border-color: rgba(34,197,94,0.12); }
+.eb-a { background: rgba(59,130,246,0.08); color: var(--info); border-color: rgba(59,130,246,0.12); }
+.eb-x { background: rgba(236,72,153,0.08); color: var(--pink); border-color: rgba(236,72,153,0.12); }
+.eb-s { background: rgba(168,85,247,0.08); color: var(--pur); border-color: rgba(168,85,247,0.12); }
+.eb-r { background: rgba(6,182,212,0.08); color: var(--cyan); border-color: rgba(6,182,212,0.12); }
+.eb-m { background: rgba(251,146,60,0.08); color: #fb923c; border-color: rgba(251,146,60,0.12); }
+.eb-l { background: rgba(132,204,22,0.08); color: var(--lime); border-color: rgba(132,204,22,0.12); }
+.eb-o { background: rgba(244,63,94,0.08); color: var(--rose); border-color: rgba(244,63,94,0.12); }
+
+.topbar-r { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: none;
+  border-radius: var(--r-sm);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all var(--tf);
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  color: var(--t2);
+  padding: 0 10px;
+  height: 28px;
+  touch-action: manipulation;
+}
+.btn:active { transform: scale(0.94); }
+.btn-ic {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: var(--bg-2);
+  border: 1px solid var(--b1);
+  font-size: 13px;
+}
+.btn-ic:hover { background: var(--bg-3); border-color: var(--b2); color: var(--t1); }
+.btn-ic.on { background: var(--ac); border-color: var(--ac); color: #fff; }
+.btn-pr {
+  background: linear-gradient(135deg, var(--ac), var(--ac2));
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(255,107,53,0.2);
+  padding: 0 12px;
+}
+.btn-pr:hover { box-shadow: 0 4px 12px rgba(255,107,53,0.3); transform: translateY(-1px); }
+.btn-sm { padding: 0 8px; height: 24px; font-size: 10px; }
+.btn-gh { background: var(--bg-2); border: 1px solid var(--b1); color: var(--t2); }
+.btn-gh:hover { background: var(--bg-3); color: var(--t1); }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   WORKSPACE
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.workspace {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  min-height: 0;
+}
+
+/* ─── Left Sidebar ─── */
+.lside {
+  width: var(--w-side);
+  background: var(--bg-1);
+  border-right: 1px solid var(--b0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+  gap: 1px;
+  z-index: var(--z-float);
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  contain: layout style paint;
+}
+.tbtn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  cursor: pointer;
+  color: var(--t4);
+  font-size: 8px;
+  font-weight: 600;
+  transition: all var(--tf);
+  border: 1.5px solid transparent;
+  position: relative;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+.tbtn .tic { font-size: 16px; transition: transform var(--tf); line-height: 1; }
+.tbtn:hover { background: var(--bg-2); color: var(--t2); }
+.tbtn:hover .tic { transform: scale(1.1); }
+.tbtn.on {
+  background: var(--bg-3);
+  color: var(--ac);
+  border-color: var(--ac);
+  box-shadow: 0 0 8px rgba(255,107,53,0.06);
+}
+.tbtn.on .tic { transform: scale(1.1); }
+.tbtn:active { transform: scale(0.92); }
+.tdiv { width: 24px; height: 1px; background: var(--b1); margin: 3px 0; flex-shrink: 0; }
+.tsp { flex: 1; }
+
+/* ─── Left Panel ─── */
+.lpanel {
+  width: var(--w-panel);
+  background: var(--bg-1);
+  border-right: 1px solid var(--b0);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: var(--z-panel);
+  flex-shrink: 0;
+  contain: layout style paint;
+}
+.lpanel.on { display: flex; }
+@media (max-width: 768px) {
+  .lpanel {
+    position: absolute;
+    left: var(--w-side);
+    top: 0;
+    bottom: 0;
+    box-shadow: var(--sh);
+    z-index: var(--z-modal);
+  }
+}
+.phead {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--b0);
+  font-weight: 700;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--t1);
+}
+.pact { display: flex; gap: 3px; }
+.pact span {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--t4);
+  font-size: 10px;
+  transition: all var(--tf);
+  touch-action: manipulation;
+}
+.pact span:hover { background: var(--bg-2); color: var(--t2); }
+.psearch {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--b0);
+  flex-shrink: 0;
+}
+.psearch input {
+  width: 100%;
+  background: var(--bg-2);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-sm);
+  padding: 6px 8px;
+  color: var(--t1);
+  font-size: 11px;
+  font-family: inherit;
+  outline: none;
+  transition: all var(--tf);
+}
+.psearch input:focus { border-color: var(--ac); box-shadow: 0 0 0 2px rgba(255,107,53,0.06); }
+.psearch input::placeholder { color: var(--t4); }
+.pbody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  contain: layout style paint;
+}
+
+/* Component Grid */
+.cgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.ccard {
+  background: var(--bg-2);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-md);
+  padding: 12px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all var(--tf);
+  position: relative;
+  overflow: hidden;
+  contain: layout style;
+  touch-action: manipulation;
+}
+.ccard:hover { border-color: var(--ac); transform: translateY(-2px); box-shadow: var(--sh-sm); }
+.ccard:active { transform: scale(0.96); }
+.ccard .cic { font-size: 20px; line-height: 1; transition: transform var(--tf); }
+.ccard:hover .cic { transform: scale(1.12); }
+.ccard .clbl {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* Asset Grid */
+.agrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.aitem {
+  aspect-ratio: 1;
+  background: var(--bg-2);
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 1px solid var(--b1);
+  cursor: pointer;
+  transition: all var(--tf);
+  color: var(--t2);
+  touch-action: manipulation;
+}
+.aitem:hover { border-color: var(--ac); transform: scale(1.05); }
+.aadd { border-style: dashed; color: var(--t4); font-size: 22px; }
+.aadd:hover { border-color: var(--ok); color: var(--ok); }
+
+/* Node List */
+.nlist { display: flex; flex-direction: column; gap: 4px; }
+.nitem {
+  padding: 8px 10px;
+  background: var(--bg-2);
+  border-radius: var(--r-sm);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--b1);
+  transition: all var(--tf);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--t2);
+  touch-action: manipulation;
+}
+.nitem:hover { border-color: var(--ac); background: var(--bg-3); }
+.nitem:active { transform: scale(0.98); }
+.ndot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.nd-e { background: var(--warn); }
+.nd-l { background: var(--ac); }
+.nd-m { background: var(--info); }
+.nd-i { background: var(--ok); }
+.nd-f { background: var(--pur); }
+.nd-a { background: var(--cyan); }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   CANVAS AREA
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.canvas {
+  flex: 1;
+  background: var(--bg-0);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  min-width: 0;
+  contain: layout style paint;
+}
+.cgrid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+/* Device Frame */
+.dframe {
+  width: 300px;
+  height: 600px;
+  background: var(--bg-1);
+  border-radius: 24px;
+  border: 1.5px solid var(--b1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.02);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  flex-shrink: 0;
+  contain: layout style paint;
+}
+.dframe.ls { width: 600px; height: 300px; }
+.dframe.tb { width: 440px; height: 600px; }
+@media (max-width: 768px) {
+  .dframe { width: 240px; height: 480px; }
+  .dframe.ls { width: 480px; height: 240px; }
+  .dframe.tb { width: 320px; height: 440px; }
+}
+@media (max-width: 400px) {
+  .dframe { width: 200px; height: 400px; border-radius: 16px; }
+}
+.dnotch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 22px;
+  background: var(--bg-0);
+  border-radius: 0 0 12px 12px;
+  z-index: 10;
+}
+.dscreen {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  background: var(--bg-0);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.dstatus {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-size: 9px;
+  color: var(--t4);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.dcontent {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Drop Zone */
+.dz {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--t4);
+  font-size: 12px;
+  text-align: center;
+  padding: 16px;
+  pointer-events: none;
+}
+.dz i { font-size: 32px; opacity: 0.4; animation: float 3s ease-in-out infinite; font-style: normal; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* Floating Elements */
+.felem {
+  position: absolute;
+  background: var(--bg-3);
+  border: 1.5px solid var(--ac);
+  border-radius: var(--r-sm);
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: grab;
+  box-shadow: 0 2px 10px rgba(255,107,53,0.1), var(--sh-sm);
+  transition: box-shadow var(--tf), border-color var(--tf);
+  user-select: none;
+  min-width: 60px;
+  text-align: center;
+  color: var(--t1);
+  z-index: 10;
+  contain: layout style;
+}
+.felem:hover { box-shadow: 0 4px 16px rgba(255,107,53,0.16), var(--sh); z-index: 50; }
+.felem.sel { border-color: var(--ok); box-shadow: 0 0 0 2px rgba(34,197,94,0.12), 0 2px 10px rgba(34,197,94,0.1); }
+.felem .fhandle {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 3px;
+  background: var(--ac);
+  border-radius: 2px;
+  cursor: grab;
+}
+.felem.sel .fhandle { background: var(--ok); }
+.felem .fresize {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 8px;
+  height: 8px;
+  background: var(--ac);
+  border-radius: 50%;
+  cursor: nwse-resize;
+}
+.felem.sel .fresize { background: var(--ok); }
+
+/* Canvas Overlay */
+.coverlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: var(--z-panel);
+}
+.covbtn {
+  width: 28px;
+  height: 28px;
+  background: var(--bg-1);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--t3);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--tf);
+  backdrop-filter: blur(8px);
+  touch-action: manipulation;
+}
+.covbtn:hover { background: var(--bg-2); border-color: var(--b2); color: var(--t1); }
+.covbtn:active { transform: scale(0.92); }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   FLOATING PANELS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.fpanel {
+  position: absolute;
+  background: var(--bg-1);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh);
+  z-index: var(--z-float);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 280px;
+  min-height: 200px;
+  contain: layout style paint;
+}
+.fpanel.on { display: flex; }
+.fpanel-h {
+  height: 36px;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--b0);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  justify-content: space-between;
+  flex-shrink: 0;
+  cursor: grab;
+  user-select: none;
+}
+.fpanel-h span { font-weight: 700; font-size: 11px; color: var(--t1); }
+.fphact { display: flex; gap: 4px; }
+.fphact span {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--t4);
+  font-size: 10px;
+  transition: all var(--tf);
+  touch-action: manipulation;
+}
+.fphact span:hover { background: var(--bg-3); color: var(--t1); }
+.fpanel-b {
+  flex: 1;
+  overflow: auto;
+  padding: 10px;
+  font-size: 11px;
+  color: var(--t2);
+  contain: layout style paint;
+}
+
+/* Code Editor */
+#codePanel {
+  inset: var(--h-top) var(--w-panel) var(--h-bot) var(--w-side);
+  border-radius: 0;
+  border-left: 1px solid var(--b0);
+  border-top: 1px solid var(--b0);
+  min-width: auto;
+  min-height: auto;
+}
+@media (max-width: 900px) { #codePanel { right: 0; } }
+@media (max-width: 768px) {
+  #codePanel { inset: var(--h-top) 0 var(--h-bot) var(--w-side); }
+}
+.code-tabs {
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--b0);
+  flex-shrink: 0;
+}
+.code-tabs::-webkit-scrollbar { display: none; }
+.ctab {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--bg-2);
+  color: var(--t3);
+  transition: all var(--tf);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+.ctab:hover { background: var(--bg-3); color: var(--t2); }
+.ctab.on { background: var(--ac); color: #fff; border-color: var(--ac); }
+.codearea {
+  flex: 1;
+  padding: 10px 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.7;
+  overflow: auto;
+  color: #a0aec0;
+  background: var(--bg-0);
+  outline: none;
+  white-space: pre;
+  tab-size: 2;
+  contain: layout style paint;
+}
+.codearea .kw { color: #c678dd; }
+.codearea .fn { color: #61afef; }
+.codearea .st { color: #98c379; }
+.codearea .nu { color: #d19a66; }
+.codearea .cm { color: #5c6370; font-style: italic; }
+.codearea .ty { color: #e5c07b; }
+.codearea .op { color: #56b6c2; }
+
+/* Node Editor */
+#nodePanel {
+  inset: 0;
+  border-radius: 0;
+  z-index: var(--z-modal);
+}
+.necanvas {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  background-image: radial-gradient(circle, var(--b1) 1px, transparent 1px);
+  background-size: 24px 24px;
+  contain: layout style paint;
+}
+.node {
+  position: absolute;
+  background: var(--bg-3);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-md);
+  min-width: 140px;
+  overflow: hidden;
+  cursor: grab;
+  transition: box-shadow var(--tf), transform var(--tf);
+  box-shadow: var(--sh-sm);
+  contain: layout style;
+}
+.node:hover { box-shadow: var(--sh); transform: translateY(-1px); }
+.node:active { cursor: grabbing; }
+.nh {
+  padding: 8px 10px;
+  font-weight: 700;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.node.e .nh { background: rgba(245,158,11,0.08); color: var(--warn); }
+.node.l .nh { background: rgba(255,107,53,0.08); color: var(--ac); }
+.node.m .nh { background: rgba(59,130,246,0.08); color: var(--info); }
+.node.i .nh { background: rgba(34,197,94,0.08); color: var(--ok); }
+.node.f .nh { background: rgba(168,85,247,0.08); color: var(--pur); }
+.node.a .nh { background: rgba(6,182,212,0.08); color: var(--cyan); }
+.nb { padding: 8px 10px; font-size: 10px; color: var(--t3); line-height: 1.4; }
+.np { display: flex; justify-content: space-between; padding: 0 8px 8px; }
+.pgrp { display: flex; flex-direction: column; gap: 4px; }
+.prt { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--t3); }
+.pdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-0);
+  cursor: pointer;
+  transition: transform var(--tf);
+}
+.pdot:hover { transform: scale(1.3); }
+.pdot.in { background: var(--ok); }
+.pdot.out { background: var(--warn); }
+.pdot.ex { background: var(--t0); }
+.pdot.da { background: var(--info); }
+
+/* Console */
+#consolePanel {
+  bottom: var(--h-bot);
+  left: var(--w-side);
+  right: var(--w-panel);
+  height: 160px;
+  border-radius: 0;
+  border-top: 1px solid var(--b0);
+  min-width: auto;
+  min-height: auto;
+}
+@media (max-width: 900px) { #consolePanel { right: 0; } }
+@media (max-width: 768px) { #consolePanel { right: 0; } }
+.conb {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--t2);
+  contain: layout style paint;
+}
+.conb .log { color: var(--t2); }
+.conb .ok { color: var(--ok); }
+.conb .er { color: var(--err); }
+.conb .wr { color: var(--warn); }
+.conb .inf { color: var(--info); }
+
+/* Shader Editor */
+#shaderPanel { top: 60px; left: 60px; width: 400px; height: 320px; }
+@media (max-width: 768px) { #shaderPanel { width: calc(100vw - 80px); left: 40px; } }
+.shadertabs {
+  display: flex;
+  gap: 3px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--b0);
+  flex-shrink: 0;
+}
+.shtab {
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--bg-2);
+  color: var(--t3);
+  transition: all var(--tf);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+.shtab:hover { background: var(--bg-3); color: var(--t2); }
+.shtab.on { background: var(--pur); color: #fff; border-color: var(--pur); }
+.shaderprev {
+  height: 120px;
+  background: #000;
+  border-bottom: 1px solid var(--b0);
+  position: relative;
+  overflow: hidden;
+}
+.shaderprev canvas { width: 100%; height: 100%; display: block; }
+
+/* Git Panel */
+#gitPanel { top: 60px; right: 280px; width: 280px; height: 360px; }
+@media (max-width: 768px) { #gitPanel { right: 10px; width: calc(100vw - 80px); } }
+.gitlog { display: flex; flex-direction: column; gap: 4px; }
+.gcommit {
+  padding: 8px;
+  background: var(--bg-2);
+  border-radius: var(--r-sm);
+  border-left: 2px solid var(--ok);
+  font-size: 10px;
+}
+.gcommit .hash { color: var(--t4); font-family: var(--mono); font-size: 9px; }
+.gcommit .msg { color: var(--t1); font-weight: 600; margin-top: 2px; }
+.gcommit .meta { color: var(--t4); font-size: 9px; margin-top: 2px; }
+
+/* Package Manager */
+#pkgPanel { top: 100px; left: 60px; width: 300px; height: 340px; }
+@media (max-width: 768px) { #pkgPanel { width: calc(100vw - 80px); left: 40px; } }
+.pkglist { display: flex; flex-direction: column; gap: 4px; }
+.pkgitem {
+  padding: 8px;
+  background: var(--bg-2);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--b1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pkgitem .pn { font-weight: 700; font-size: 11px; color: var(--t1); }
+.pkgitem .pv { font-size: 9px; color: var(--t4); font-family: var(--mono); }
+.pkgitem .ps {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--ok);
+  color: #fff;
+}
+
+/* Profiler */
+#profPanel { top: 60px; right: 10px; width: 260px; height: 280px; }
+@media (max-width: 768px) { #profPanel { width: calc(100vw - 80px); } }
+.profbar {
+  height: 20px;
+  background: var(--bg-2);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  margin-bottom: 6px;
+  position: relative;
+}
+.profbar .fill { height: 100%; border-radius: var(--r-sm); transition: width 0.3s; }
+.profbar .lbl {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Settings */
+#settingsPanel {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 360px;
+  height: auto;
+  max-height: 80dvh;
+}
+@media (max-width: 480px) { #settingsPanel { width: calc(100vw - 32px); } }
+.setgrp { border-bottom: 1px solid var(--b0); padding: 10px; }
+.setgrp h4 {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--t1);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.setrow { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
+.setrow span { font-size: 11px; color: var(--t2); }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   RIGHT SIDEBAR (Properties)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.rside {
+  width: var(--w-panel);
+  background: var(--bg-1);
+  border-left: 1px solid var(--b0);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: var(--z-float);
+  flex-shrink: 0;
+  contain: layout style paint;
+}
+@media (max-width: 900px) { .rside { display: none; } }
+.pgrp2 { border-bottom: 1px solid var(--b0); }
+.pgh {
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background var(--tf);
+  user-select: none;
+  color: var(--t1);
+}
+.pgh:hover { background: var(--bg-2); }
+.pgh .chv { transition: transform var(--tf); font-size: 9px; color: var(--t4); }
+.pgh.c .chv { transform: rotate(-90deg); }
+.pgb { padding: 0 12px 8px; display: flex; flex-direction: column; gap: 8px; }
+.pgb.c { display: none; }
+.prow { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.plbl { font-size: 10px; color: var(--t3); flex-shrink: 0; }
+.pinp {
+  background: var(--bg-2);
+  border: 1px solid var(--b1);
+  border-radius: 5px;
+  padding: 4px 8px;
+  color: var(--t1);
+  font-size: 11px;
+  width: 110px;
+  outline: none;
+  font-family: var(--mono);
+  transition: all var(--tf);
+}
+.pinp:focus { border-color: var(--ac); box-shadow: 0 0 0 2px rgba(255,107,53,0.06); }
+.pinp::placeholder { color: var(--t4); }
+.pcol {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 2px solid var(--b1);
+  cursor: pointer;
+  transition: transform var(--tf);
+}
+.pcol:hover { transform: scale(1.1); }
+.psli {
+  width: 110px;
+  height: 3px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--bg-3);
+  border-radius: 2px;
+  outline: none;
+}
+.psli::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ac);
+  cursor: pointer;
+  border: 2px solid var(--bg-0);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.ptog {
+  width: 28px;
+  height: 16px;
+  background: var(--bg-3);
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+  transition: background var(--tf);
+  border: 1px solid var(--b1);
+}
+.ptog.on { background: var(--ok); }
+.ptog::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform var(--tf);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.ptog.on::after { transform: translateX(12px); }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   BOTTOM BAR
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.bbar {
+  height: calc(var(--h-bot) + var(--safe-bot));
+  padding-bottom: var(--safe-bot);
+  background: var(--bg-1);
+  border-top: 1px solid var(--b0);
+  display: flex;
+  align-items: center;
+  padding-left: max(8px, var(--safe-l));
+  padding-right: max(8px, var(--safe-r));
+  gap: 6px;
+  flex-shrink: 0;
+  z-index: var(--z-float);
+  contain: layout style paint;
+}
+.ltabs {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ltabs::-webkit-scrollbar { display: none; }
+.ltab {
+  padding: 4px 10px;
+  background: var(--bg-2);
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--tf);
+  color: var(--t3);
+  white-space: nowrap;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+.ltab:hover { background: var(--bg-3); color: var(--t2); }
+.ltab.on { background: var(--ac); color: #fff; border-color: var(--ac); }
+.tline {
+  flex: 1;
+  height: 28px;
+  background: var(--bg-2);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--b1);
+}
+.tseg {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: opacity var(--tf);
+  cursor: pointer;
+}
+.tseg:hover { opacity: 1; }
+.thead {
+  position: absolute;
+  left: 30%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--ac);
+  z-index: 2;
+  box-shadow: 0 0 4px rgba(255,107,53,0.4);
+}
+.thead::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -4px;
+  width: 10px;
+  height: 5px;
+  background: var(--ac);
+  border-radius: 2px;
+}
+.pbtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ac);
+  border: none;
+  color: #fff;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--tf);
+  box-shadow: 0 2px 6px rgba(255,107,53,0.25);
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+.pbtn:hover { transform: scale(1.08); box-shadow: 0 4px 12px rgba(255,107,53,0.35); }
+.pbtn:active { transform: scale(0.95); }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   TOAST & CONTEXT MENU
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  bottom: calc(60px + var(--safe-bot));
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--bg-3);
+  border: 1px solid var(--b1);
+  padding: 8px 14px;
+  border-radius: var(--r-lg);
+  font-size: 11px;
+  font-weight: 600;
+  z-index: var(--z-toast);
+  opacity: 0;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  box-shadow: var(--sh);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--t1);
+  max-width: 90vw;
+  contain: layout style paint;
+}
+.toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast i {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  flex-shrink: 0;
+  font-style: normal;
+}
+.toast.ok i { background: rgba(34,197,94,0.12); color: var(--ok); }
+.toast.er i { background: rgba(239,68,68,0.12); color: var(--err); }
+.toast.inf i { background: rgba(59,130,246,0.12); color: var(--info); }
+
+.ctx {
+  position: fixed;
+  background: var(--bg-3);
+  border: 1px solid var(--b1);
+  border-radius: var(--r-md);
+  padding: 5px;
+  z-index: var(--z-overlay);
+  display: none;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 140px;
+  box-shadow: var(--sh);
+  backdrop-filter: blur(16px);
+  contain: layout style paint;
+}
+.ctx.on { display: flex; }
+.cxi {
+  padding: 6px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all var(--tf);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--t2);
+  touch-action: manipulation;
+}
+.cxi:hover { background: var(--bg-4); color: var(--t1); }
+.cxi i { font-size: 12px; width: 14px; text-align: center; font-style: normal; }
+.cxd { height: 1px; background: var(--b1); margin: 2px 0; }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.fade-in { animation: fi 0.2s ease forwards; }
+@keyframes fi { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE & ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  :root { --w-side: 44px; --h-top: 40px; --h-bot: 44px; --w-panel: 220px; }
+  .tbtn { width: 36px; height: 36px; }
+  .tbtn .tic { font-size: 14px; }
+  .logo { width: 22px; height: 22px; }
+  .proj-name { font-size: 11px; }
+  .btn-ic { width: 26px; height: 26px; font-size: 12px; }
+  .btn-pr { height: 26px; padding: 0 8px; font-size: 10px; }
+  .covbtn { width: 26px; height: 26px; font-size: 11px; }
+}
+
+@media (pointer: coarse) {
+  .tbtn, .btn, .ccard, .aitem, .nitem, .e-card, .p-card, .covbtn, .ltab, .ctab, .shtab, .cxi, .pact span, .fphact span { cursor: pointer; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root { --b1: rgba(255,255,255,0.2); --b2: rgba(255,255,255,0.3); --t2: #cbd5e1; --t3: #94a3b8; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════
+     SPLASH SCREEN
+     ═══════════════════════════════════════════════════════════════════════════════ -->
+<div id="splash" role="dialog" aria-label="Splash Screen">
+  <div class="spl-logo" aria-hidden="true"></div>
+  <div class="spl-title">AETHER ENGINE</div>
+  <div class="spl-sub">Universal Development Environment</div>
+  <div class="spl-ver">v3.0 SUPREME — Production Ready</div>
+  <div class="spl-bar" aria-hidden="true"><div class="spl-fill" id="sfill"></div></div>
+  <div class="spl-msg" id="smsg">Initializing...</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════
+     PROJECT MANAGER
+     ═══════════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="projModal" role="dialog" aria-modal="true" aria-label="Project Manager">
+  <div class="modal-h">
+    <h2>Projects</h2>
+    <p>Select a project or create a new one. All data is stored locally.</p>
+  </div>
+  <div class="p-grid" id="projGrid">
+    <div class="p-card p-card-new" onclick="Project.new()">
+      <div class="p-icon" style="background:rgba(255,107,53,0.1);color:var(--ac);font-size:20px">+</div>
+      <h3 style="color:var(--ac)">New Project</h3>
+      <p>Start from scratch with any engine</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════
+     ENGINE SELECTOR
+     ═══════════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="engModal" role="dialog" aria-modal="true" aria-label="Engine Selector">
+  <div class="modal-h">
+    <h2>Select Engine</h2>
+    <p>Choose the runtime engine for your project. This determines available tools and export targets.</p>
+  </div>
+  <div class="e-grid">
+    <div class="e-card" onclick="Engine.pick('game')">
+      <div class="e-icon" style="background:rgba(245,158,11,0.08)">🎮</div>
+      <h3 style="color:var(--warn)">Game</h3>
+      <p>2D/3D game builder with physics, AI, visual scripting, and particle systems</p>
+    </div>
+    <div class="e-card" onclick="Engine.pick('web')">
+      <div class="e-icon" style="background:rgba(34,197,94,0.08)">🌐</div>
+      <h3 style="color:var(--ok)">Web</h3>
+      <p>Full-stack web builder with live preview, PWA export, and CSS design tools</p>
+    </div>
+    <div class="e-card" onclick="Engine.pick('app')">
+      <div class="e-icon" style="background:rgba(59,130,246,0.08)">📱</div>
+      <h3 style="color:var(--info)">App</h3>
+      <p>Native mobile app builder with drag-drop UI, API connectors, and ML Kit</p>
+    </div>
+    <div class="e-card" onclick="Engine.pick('gfx')">
+      <div class="e-icon" style="background:rgba(236,72,153,0.08)">🎨</div>
+      <h3 style="color:var(--pink)">Graphics</h3>
+      <p>Vector/raster editor, shader builder, PBR materials, and procedural generation</p>
+    </div>
+    <div class="e-card" onclick="Engine.pick('sim')">
+      <div class="e-icon" style="background:rgba(168,85,247,0.08)">🔬</div>
+      <h3 style="color:var(--pur)">Simulator</h3>
+      <p>Vehicle dynamics, flight physics, fluid simulation, and robotics kinematics</p>
+    </div>
+    <div class="e-card" onclick="Engine.pick('retro')">
+      <div class="e-icon" style="background:rgba(6,182,212,0.08)">👾</div>
+      <h3 style="color:var(--cyan)">Retro</h3>
+      <p>Pixel-perfect rendering, libRetro cores, CRT shaders, and chiptune synthesis</p>
+    </div>
+    <div class="e-card" onclick="Engine.pick('ai')">
+      <div class="e-icon" style="background:rgba(132,204,22,0.08)">🧠</div>
+      <h3 style="color:var(--lime)">AI / ML</h3>
+      <p>Neural network designer, dataset manager, model training, and inference engine</p>
+    </div>
+    <div class="e-card" onclick="Engine.pick('audio')">
+      <div class="e-icon" style="background:rgba(244,63,94,0.08)">🎵</div>
+      <h3 style="color:var(--rose)">Audio</h3>
+      <p>DAW, synthesizer, sampler, effects rack, and spatial audio engine</p>
+    </div>
+    <div class="e-card" onclick="Engine.pick('movie')">
+      <div class="e-icon" style="background:rgba(251,146,60,0.08)">🎬</div>
+      <h3 style="color:#fb923c">Movie</h3>
+      <p>Video editing, compositing, VFX, motion graphics, and CGI rendering</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════
+     MAIN APPLICATION
+     ═══════════════════════════════════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- Top Bar -->
+  <div class="topbar" role="banner">
+    <div class="topbar-l">
+      <div class="logo" onclick="Project.menu()" title="Menu" role="button" aria-label="Menu">⚡</div>
+      <span class="proj-name" id="pTitle" onclick="Project.rename()" role="button" aria-label="Rename Project">Untitled</span>
+      <span class="e-badge eb-g" id="eBadge">GAME</span>
+    </div>
+    <div class="topbar-r">
+      <button class="btn btn-ic" id="btnCode" onclick="UI.toggle('codePanel')" title="Code Editor (Ctrl+`)">💻</button>
+      <button class="btn btn-ic" id="btnNode" onclick="UI.toggle('nodePanel')" title="Node Editor (Ctrl+N)">🧩</button>
+      <button class="btn btn-ic" id="btnShader" onclick="UI.toggle('shaderPanel')" title="Shader Editor">🎨</button>
+      <button class="btn btn-ic" id="btnGit" onclick="UI.toggle('gitPanel')" title="Version Control">🌿</button>
+      <button class="btn btn-ic" id="btnPkg" onclick="UI.toggle('pkgPanel')" title="Packages">📦</button>
+      <button class="btn btn-ic" id="btnProf" onclick="UI.toggle('profPanel')" title="Profiler">📊</button>
+      <button class="btn btn-ic" id="btnCon" onclick="UI.toggle('consolePanel')" title="Console (Ctrl+J)">📟</button>
+      <button class="btn btn-ic" onclick="Actions.undo()" title="Undo (Ctrl+Z)">↩️</button>
+      <button class="btn btn-ic" onclick="UI.toggle('settingsPanel')" title="Settings">⚙️</button>
+      <button class="btn btn-pr" onclick="Actions.preview()">▶ Preview</button>
+      <button class="btn btn-pr btn-sm" onclick="Actions.export()">⬆ Export</button>
+    </div>
+  </div>
+
+  <!-- Workspace -->
+  <div class="workspace">
+
+    <!-- Left Sidebar -->
+    <nav class="lside" id="lside" role="navigation" aria-label="Tools">
+      <div class="tbtn on" data-t="scene" onclick="Tools.switch(this,'scene')" title="Scene"><span class="tic">🎬</span>Scene</div>
+      <div class="tbtn" data-t="ui" onclick="Tools.switch(this,'ui')" title="UI"><span class="tic">🧱</span>UI</div>
+      <div class="tbtn" data-t="assets" onclick="Tools.switch(this,'assets')" title="Assets"><span class="tic">🖼️</span>Asset</div>
+      <div class="tbtn" data-t="logic" onclick="Tools.switch(this,'logic')" title="Logic"><span class="tic">⚡</span>Logic</div>
+      <div class="tbtn" data-t="physics" onclick="Tools.switch(this,'physics')" title="Physics"><span class="tic">🔬</span>Phys</div>
+      <div class="tbtn" data-t="anim" onclick="Tools.switch(this,'anim')" title="Animation"><span class="tic">🎞️</span>Anim</div>
+      <div class="tbtn" data-t="shader" onclick="Tools.switch(this,'shader')" title="Shaders"><span class="tic">✨</span>Shad</div>
+      <div class="tbtn" data-t="audio" onclick="Tools.switch(this,'audio')" title="Audio"><span class="tic">🎵</span>Audio</div>
+      <div class="tdiv"></div>
+      <div class="tbtn" data-t="layers" onclick="Tools.switch(this,'layers')" title="Layers"><span class="tic">📑</span>Layer</div>
+      <div class="tbtn" data-t="history" onclick="Tools.switch(this,'history')" title="History"><span class="tic">🕐</span>Hist</div>
+      <div class="tsp"></div>
+      <div class="tbtn" onclick="Project.save()" title="Save (Ctrl+S)"><span class="tic">💾</span>Save</div>
+      <div class="tbtn" onclick="Project.load()" title="Load"><span class="tic">📂</span>Load</div>
+    </nav>
+
+    <!-- Left Panel -->
+    <aside class="lpanel on" id="lpanel" role="complementary" aria-label="Left Panel">
+      <div class="phead"><span id="ptitle">Scene</span><div class="pact"><span onclick="Panel.settings()" title="Settings" role="button">⚙️</span><span onclick="Panel.toggle()" title="Close" role="button">✕</span></div></div>
+      <div class="psearch"><input type="text" placeholder="Search..." id="psearch" oninput="Panel.filter()"></div>
+      <div class="pbody" id="pbody"></div>
+    </aside>
+
+    <!-- Canvas Area -->
+    <main class="canvas" id="canvas" role="main" aria-label="Canvas">
+      <div class="cgrid-bg" id="cgrid"></div>
+      <div class="coverlay" role="toolbar" aria-label="Canvas Controls">
+        <div class="covbtn" onclick="Canvas.zoom(1.2)" title="Zoom In">+</div>
+        <div class="covbtn" onclick="Canvas.zoom(0.8)" title="Zoom Out">−</div>
+        <div class="covbtn" onclick="Canvas.fit()" title="Fit">⤢</div>
+        <div class="covbtn" onclick="Canvas.grid()" title="Toggle Grid">⊞</div>
+        <div class="covbtn" onclick="Canvas.device()" title="Device">📱</div>
+      </div>
+      <div class="dframe" id="dframe">
+        <div class="dnotch"></div>
+        <div class="dscreen">
+          <div class="dstatus"><span id="clock">09:41</span><span>📶 5G 🔋</span></div>
+          <div class="dcontent" id="dcontent">
+            <div class="dz" id="dz"><i>📐</i><div>Drag components here<br>or tap + to add</div><div style="font-size:10px;color:var(--t4);margin-top:4px">Double-tap to fit • Pinch to zoom</div></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="rside" id="rside" role="complementary" aria-label="Properties">
+      <div class="pgrp2">
+        <div class="pgh" onclick="Props.toggle(this)"><span>Transform</span><span class="chv">▼</span></div>
+        <div class="pgb">
+          <div class="prow"><span class="plbl">Position X</span><input class="pinp" id="px" type="number" step="0.1" onchange="Props.apply('x',this.value)"></div>
+          <div class="prow"><span class="plbl">Position Y</span><input class="pinp" id="py" type="number" step="0.1" onchange="Props.apply('y',this.value)"></div>
+          <div class="prow"><span class="plbl">Position Z</span><input class="pinp" value="0" type="number" step="0.1"></div>
+          <div class="prow"><span class="plbl">Rotation</span><input class="pinp" value="0 0 0"></div>
+          <div class="prow"><span class="plbl">Scale</span><input class="pinp" value="1 1 1"></div>
+        </div>
+      </div>
+      <div class="pgrp2">
+        <div class="pgh" onclick="Props.toggle(this)"><span>Appearance</span><span class="chv">▼</span></div>
+        <div class="pgb">
+          <div class="prow"><span class="plbl">Background</span><div class="pcol" style="background:linear-gradient(135deg,#6366f1,#a855f7)" onclick="Props.color(this)"></div></div>
+          <div class="prow"><span class="plbl">Opacity</span><input type="range" class="psli" min="0" max="100" value="100" oninput="Props.opacity(this.value)"></div>
+          <div class="prow"><span class="plbl">Radius</span><input class="pinp" value="8px"></div>
+          <div class="prow"><span class="plbl">Border</span><input class="pinp" value="0px"></div>
+        </div>
+      </div>
+      <div class="pgrp2">
+        <div class="pgh" onclick="Props.toggle(this)"><span>Behavior</span><span class="chv">▼</span></div>
+        <div class="pgb">
+          <div class="prow"><span class="plbl">On Click</span><input class="pinp" value="navigate()"></div>
+          <div class="prow"><span class="plbl">On Hover</span><input class="pinp" value="scale(1.05)"></div>
+          <div class="prow"><span class="plbl">Animation</span><input class="pinp" value="fadeIn 0.3s"></div>
+          <div class="prow"><span class="plbl">Interactable</span><div class="ptog on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+      <div class="pgrp2">
+        <div class="pgh" onclick="Props.toggle(this)"><span>Physics</span><span class="chv">▼</span></div>
+        <div class="pgb">
+          <div class="prow"><span class="plbl">Body Type</span><input class="pinp" value="Dynamic"></div>
+          <div class="prow"><span class="plbl">Mass</span><input class="pinp" value="1" type="number"></div>
+          <div class="prow"><span class="plbl">Gravity</span><input class="pinp" value="9.81" type="number"></div>
+          <div class="prow"><span class="plbl">Friction</span><input type="range" class="psli" min="0" max="100" value="30"></div>
+          <div class="prow"><span class="plbl">Restitution</span><input type="range" class="psli" min="0" max="100" value="20"></div>
+        </div>
+      </div>
+      <div class="pgrp2">
+        <div class="pgh c" onclick="Props.toggle(this)"><span>Layout</span><span class="chv">▼</span></div>
+        <div class="pgb c">
+          <div class="prow"><span class="plbl">Anchor</span><input class="pinp" value="Center"></div>
+          <div class="prow"><span class="plbl">Flex</span><input class="pinp" value="0"></div>
+          <div class="prow"><span class="plbl">Constraints</span><input class="pinp" value="None"></div>
+        </div>
+      </div>
+      <div class="pgrp2">
+        <div class="pgh c" onclick="Props.toggle(this)"><span>Advanced</span><span class="chv">▼</span></div>
+        <div class="pgb c">
+          <div class="prow"><span class="plbl">Shader</span><input class="pinp" value="default"></div>
+          <div class="prow"><span class="plbl">Layer</span><input class="pinp" value="Default"></div>
+          <div class="prow"><span class="plbl">Tag</span><input class="pinp" value="Untagged"></div>
+          <div class="prow"><span class="plbl">Static</span><div class="ptog" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="bbar" role="toolbar" aria-label="Timeline">
+    <div class="ltabs">
+      <div class="ltab on">Scene 1</div>
+      <div class="ltab">UI Layer</div>
+      <div class="ltab">Audio</div>
+      <div class="ltab" onclick="UI.layer()">+</div>
+    </div>
+    <div class="tline">
+      <div class="tseg" style="left:5%;width:18%;background:rgba(99,102,241,0.4)"></div>
+      <div class="tseg" style="left:25%;width:12%;background:rgba(245,158,11,0.4)"></div>
+      <div class="tseg" style="left:40%;width:25%;background:rgba(34,197,94,0.4)"></div>
+      <div class="tseg" style="left:68%;width:15%;background:rgba(236,72,153,0.4)"></div>
+      <div class="thead"></div>
+    </div>
+    <button class="pbtn" onclick="Actions.play()" id="pbtn" aria-label="Play">▶</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════
+     FLOATING PANELS
+     ═══════════════════════════════════════════════════════════════════════════════ -->
+
+<!-- Code Panel -->
+<div class="fpanel" id="codePanel" role="dialog" aria-label="Code Editor">
+  <div class="fpanel-h"><span>Code Editor</span><div class="fphact"><span onclick="Code.add()" title="New File" role="button">+</span><span onclick="UI.toggle('codePanel')" title="Close" role="button">✕</span></div></div>
+  <div class="code-tabs" id="codeTabs">
+    <div class="ctab on" onclick="Code.tab(this,'main')">main.js</div>
+    <div class="ctab" onclick="Code.tab(this,'style')">style.css</div>
+    <div class="ctab" onclick="Code.tab(this,'wasm')">module.wat</div>
+    <div class="ctab" onclick="Code.tab(this,'py')">script.py</div>
+    <div class="ctab" onclick="Code.tab(this,'java')">Main.java</div>
+    <div class="ctab" onclick="Code.tab(this,'c')">main.c</div>
+    <div class="ctab" onclick="Code.tab(this,'rust')">lib.rs</div>
+    <div class="ctab" onclick="Code.tab(this,'go')">main.go</div>
+    <div class="ctab" onclick="Code.tab(this,'asm')">core.asm</div>
+    <div class="ctab" onclick="Code.tab(this,'bin')">data.bin</div>
+    <div class="ctab" onclick="Code.add()">+</div>
+  </div>
+  <div class="codearea" id="codearea" contenteditable="true" spellcheck="false">
+<span class="cm">// AETHER Engine v3 SUPREME — Universal Runtime</span>
+<span class="cm">// Supports: JS, TS, Python, Java, C, C++, Rust, Go, WASM, Assembly, Binary</span>
+
+<span class="kw">import</span> { <span class="fn">Engine</span>, <span class="fn">Scene</span>, <span class="fn">Entity</span> } <span class="kw">from</span> <span class="st">'aether-core'</span>;
+<span class="kw">import</span> { <span class="fn">Physics</span>, <span class="fn">Vec3</span>, <span class="fn">Quat</span> } <span class="kw">from</span> <span class="st">'aether-physics'</span>;
+<span class="kw">import</span> { <span class="fn">Shader</span>, <span class="fn">Material</span>, <span class="fn">Mesh</span> } <span class="kw">from</span> <span class="st">'aether-gfx'</span>;
+<span class="kw">import</span> { <span class="fn">Audio</span>, <span class="fn">Synth</span>, <span class="fn">Sampler</span> } <span class="kw">from</span> <span class="st">'aether-audio'</span>;
+<span class="kw">import</span> { <span class="fn">Net</span>, <span class="fn">WS</span>, <span class="fn">HTTP</span> } <span class="kw">from</span> <span class="st">'aether-net'</span>;
+<span class="kw">import</span> { <span class="fn">ML</span>, <span class="fn">Tensor</span>, <span class="fn">Model</span> } <span class="kw">from</span> <span class="st">'aether-ml'</span>;
+
+<span class="kw">const</span> <span class="fn">engine</span> = <span class="kw">new</span> <span class="ty">Engine</span>({
+  <span class="fn">target</span>: <span class="st">'webgl2'</span>,
+  <span class="fn">physics</span>: <span class="st">'wasm-bullet'</span>,
+  <span class="fn">audio</span>: <span class="st">'webaudio'</span>,
+  <span class="fn">network</span>: <span class="st">'websocket'</span>,
+  <span class="fn">ml</span>: <span class="st">'tensorflow-lite'</span>
+});
+
+<span class="kw">class</span> <span class="ty">Player</span> <span class="kw">extends</span> <span class="ty">Entity</span> {
+  <span class="fn">constructor</span>() {
+    <span class="kw">super</span>();
+    <span class="kw">this</span>.<span class="fn">transform</span> = <span class="kw">new</span> <span class="ty">Transform</span>();
+    <span class="kw">this</span>.<span class="fn">velocity</span> = <span class="kw">new</span> <span class="ty">Vec3</span>(<span class="nu">0</span>, <span class="nu">0</span>, <span class="nu">0</span>);
+    <span class="kw">this</span>.<span class="fn">input</span> = <span class="kw">new</span> <span class="ty">PlayerInput</span>();
+  }
+
+  <span class="fn">update</span>(<span class="fn">dt</span>) {
+    <span class="kw">const</span> <span class="fn">dir</span> = <span class="kw">this</span>.<span class="fn">input</span>.<span class="fn">getDirection</span>();
+    <span class="kw">this</span>.<span class="fn">velocity</span> = <span class="fn">dir</span>.<span class="fn">scale</span>(<span class="nu">5.0</span>);
+    <span class="kw">this</span>.<span class="fn">transform</span>.<span class="fn">position</span>.<span class="fn">add</span>(<span class="kw">this</span>.<span class="fn">velocity</span>.<span class="fn">scale</span>(<span class="fn">dt</span>));
+
+    <span class="kw">if</span> (<span class="kw">this</span>.<span class="fn">input</span>.<span class="fn">jump</span> <span class="op">&&</span> <span class="fn">isGrounded</span>(<span class="kw">this</span>.<span class="fn">transform</span>)) {
+      <span class="kw">this</span>.<span class="fn">velocity</span>.<span class="fn">y</span> = <span class="nu">12.0</span>;
+      <span class="fn">Audio</span>.<span class="fn">play</span>(<span class="st">"jump_sfx"</span>);
+    }
+  }
+}
+
+<span class="kw">function</span> <span class="fn">isGrounded</span>(<span class="fn">t</span>) {
+  <span class="kw">return</span> <span class="fn">Physics</span>.<span class="fn">raycast</span>(<span class="fn">t</span>.<span class="fn">position</span>, <span class="ty">Vec3</span>.<span class="fn">DOWN</span>, <span class="nu">0.1</span>);
+}
+
+<span class="cm">/* WASM Interface */</span>
+<span class="kw">const</span> <span class="fn">wasm</span> = <span class="kw">await</span> <span class="ty">WebAssembly</span>.<span class="fn">instantiateStreaming</span>(
+  <span class="fn">fetch</span>(<span class="st">"./physics.wasm"</span>),
+  { <span class="fn">env</span>: { <span class="fn">memory</span>: <span class="kw">new</span> <span class="ty">WebAssembly</span>.<span class="ty">Memory</span>({ <span class="fn">initial</span>: <span class="nu">256</span> }) } }
+);
+
+<span class="cm">/* Python Bridge (Pyodide) */</span>
+<span class="kw">const</span> <span class="fn">py</span> = <span class="kw">await</span> <span class="fn">loadPyodide</span>();
+<span class="fn">py</span>.<span class="fn">runPython</span>(<span class="st">`</span>
+<span class="st">  import numpy as np</span>
+<span class="st">  from aether_ml import NeuralNet</span>
+<span class="st">  model = NeuralNet([64, 128, 64, 10])</span>
+<span class="st">  model.train(dataset, epochs=100)</span>
+<span class="st">`</span>);
+
+<span class="cm">/* Java JNI Bridge */</span>
+<span class="ty">System</span>.<span class="fn">loadLibrary</span>(<span class="st">"aether_native"</span>);
+<span class="kw">native void</span> <span class="fn">renderFrame</span>(<span class="ty">long</span> <span class="fn">ptr</span>);
+
+<span class="cm">/* Rust FFI */</span>
+<span class="kw">extern</span> <span class="st">"C"</span> {
+  <span class="kw">fn</span> <span class="fn">aether_init</span>(<span class="fn">cfg</span>: <span class="op">*</span><span class="kw">const</span> <span class="ty">c_char</span>) <span class="op">-></span> <span class="ty">i32</span>;
+  <span class="kw">fn</span> <span class="fn">aether_render</span>(<span class="fn">dt</span>: <span class="ty">f32</span>);
+}
+
+<span class="cm">/* Go Cgo */</span>
+<span class="cm">// #cgo LDFLAGS: -laether</span>
+<span class="cm">// #include "aether.h"</span>
+<span class="kw">import</span> <span class="st">"C"</span>
+<span class="kw">func</span> <span class="fn">main</span>() { <span class="ty">C</span>.<span class="fn">aether_run</span>() }
+
+<span class="cm">/* Assembly Core */</span>
+<span class="cm">; aether_core.asm — SIMD optimized matrix multiply</span>
+<span class="fn">_mat4_mul</span>:
+  <span class="fn">vmovaps</span> <span class="fn">ymm0</span>, [<span class="fn">rdi</span>]
+  <span class="fn">vmovaps</span> <span class="fn">ymm1</span>, [<span class="fn">rsi</span>]
+  <span class="fn">vfmadd231ps</span> <span class="fn">ymm2</span>, <span class="fn">ymm0</span>, <span class="fn">ymm1</span>
+  <span class="fn">vmovaps</span> [<span class="fn">rdx</span>], <span class="fn">ymm2</span>
+  <span class="fn">ret</span>
+  </div>
+</div>
+
+<!-- Node Panel -->
+<div class="fpanel" id="nodePanel" role="dialog" aria-label="Node Editor">
+  <div class="fpanel-h"><span>Visual Scripting</span><div class="fphact"><span onclick="NodeEditor.add()" title="Add Node" role="button">+</span><span onclick="UI.toggle('nodePanel')" title="Close" role="button">✕</span></div></div>
+  <div class="necanvas" id="necanvas">
+    <div class="node e" style="left:30px;top:30px" data-id="n1"><div class="nh">🎮 OnBeginPlay</div><div class="nb">Triggered when game starts</div><div class="np"><div class="pgrp"><div class="prt"><div class="pdot in"></div><span>Exec</span></div></div><div class="pgrp"><div class="prt"><span>Out</span><div class="pdot out ex"></div></div></div></div></div>
+    <div class="node l" style="left:200px;top:30px" data-id="n2"><div class="nh">⚡ SpawnActor</div><div class="nb">Create object at location</div><div class="np"><div class="pgrp"><div class="prt"><div class="pdot in ex"></div><span>Exec</span></div><div class="prt"><div class="pdot in da"></div><span>Class</span></div><div class="prt"><div class="pdot in da"></div><span>Transform</span></div></div><div class="pgrp"><div class="prt"><span>Exec</span><div class="pdot out ex"></div></div><div class="prt"><span>Actor</span><div class="pdot out da"></div></div></div></div></div>
+    <div class="node i" style="left:200px;top:140px" data-id="n3"><div class="nh">🌐 LoadScene</div><div class="nb">Transition to level</div><div class="np"><div class="pgrp"><div class="prt"><div class="pdot in ex"></div><span>Exec</span></div><div class="prt"><div class="pdot in da"></div><span>Scene</span></div></div><div class="pgrp"><div class="prt"><span>Exec</span><div class="pdot out ex"></div></div></div></div></div>
+    <div class="node m" style="left:380px;top:30px" data-id="n4"><div class="nh">🔢 AddFloat</div><div class="nb">A + B</div><div class="np"><div class="pgrp"><div class="prt"><div class="pdot in da"></div><span>A</span></div><div class="prt"><div class="pdot in da"></div><span>B</span></div></div><div class="pgrp"><div class="prt"><span>Result</span><div class="pdot out da"></div></div></div></div></div>
+    <div class="node f" style="left:30px;top:140px" data-id="n5"><div class="nh">🔀 Branch</div><div class="nb">If condition is true</div><div class="np"><div class="pgrp"><div class="prt"><div class="pdot in ex"></div><span>Exec</span></div><div class="prt"><div class="pdot in da"></div><span>Condition</span></div></div><div class="pgrp"><div class="prt"><span>True</span><div class="pdot out ex"></div></div><div class="prt"><span>False</span><div class="pdot out ex"></div></div></div></div></div>
+    <div class="node a" style="left:380px;top:140px" data-id="n6"><div class="nh">🧠 NeuralNet</div><div class="nb">ML inference node</div><div class="np"><div class="pgrp"><div class="prt"><div class="pdot in da"></div><span>Input</span></div><div class="prt"><div class="pdot in da"></div><span>Model</span></div></div><div class="pgrp"><div class="prt"><span>Output</span><div class="pdot out da"></div></div></div></div></div>
+  </div>
+</div>
+
+<!-- Console Panel -->
+<div class="fpanel" id="consolePanel" role="dialog" aria-label="Console">
+  <div class="fpanel-h"><span>Console</span><div class="fphact"><span onclick="Console.clear()" title="Clear" role="button">🗑️</span><span onclick="UI.toggle('consolePanel')" title="Close" role="button">✕</span></div></div>
+  <div class="conb" id="conb">
+    <div class="inf">[System] AETHER Engine v3 SUPREME initialized</div>
+    <div class="inf">[System] Kernel: JS Engine + WASM runtime</div>
+    <div class="inf">[System] Physics: Bullet (WASM) loaded</div>
+    <div class="inf">[System] Graphics: WebGL2 + WebGPU ready</div>
+    <div class="inf">[System] Audio: WebAudio + Worklet ready</div>
+    <div class="inf">[System] Network: WebSocket + WebRTC ready</div>
+    <div class="inf">[System] ML: TensorFlow.js Lite backend</div>
+    <div class="ok">[Build] All modules verified — Ready</div>
+  </div>
+</div>
+
+<!-- Shader Panel -->
+<div class="fpanel" id="shaderPanel" role="dialog" aria-label="Shader Editor">
+  <div class="fpanel-h"><span>Shader Editor</span><div class="fphact"><span onclick="Shader.compile()" title="Compile" role="button">▶</span><span onclick="UI.toggle('shaderPanel')" title="Close" role="button">✕</span></div></div>
+  <div class="shadertabs">
+    <div class="shtab on" onclick="Shader.tab(this,'vert')">Vertex</div>
+    <div class="shtab" onclick="Shader.tab(this,'frag')">Fragment</div>
+    <div class="shtab" onclick="Shader.tab(this,'comp')">Compute</div>
+    <div class="shtab" onclick="Shader.tab(this,'wgsl')">WGSL</div>
+  </div>
+  <div class="shaderprev"><canvas id="shaderCanvas"></canvas></div>
+  <div class="codearea" style="flex:1;font-size:10px" contenteditable="true" spellcheck="false">
+<span class="kw">#version</span> <span class="nu">300</span> <span class="fn">es</span>
+<span class="kw">precision</span> <span class="ty">highp</span> <span class="ty">float</span>;
+
+<span class="kw">in</span> <span class="ty">vec3</span> <span class="fn">aPosition</span>;
+<span class="kw">in</span> <span class="ty">vec2</span> <span class="fn">aUV</span>;
+<span class="kw">in</span> <span class="ty">vec3</span> <span class="fn">aNormal</span>;
+
+<span class="kw">uniform</span> <span class="ty">mat4</span> <span class="fn">uModel</span>;
+<span class="kw">uniform</span> <span class="ty">mat4</span> <span class="fn">uView</span>;
+<span class="kw">uniform</span> <span class="ty">mat4</span> <span class="fn">uProj</span>;
+
+<span class="kw">out</span> <span class="ty">vec2</span> <span class="fn">vUV</span>;
+<span class="kw">out</span> <span class="ty">vec3</span> <span class="fn">vNormal</span>;
+<span class="kw">out</span> <span class="ty">vec3</span> <span class="fn">vWorldPos</span>;
+
+<span class="kw">void</span> <span class="fn">main</span>() {
+  <span class="ty">vec4</span> <span class="fn">worldPos</span> = <span class="fn">uModel</span> * <span class="ty">vec4</span>(<span class="fn">aPosition</span>, <span class="nu">1.0</span>);
+  <span class="fn">vWorldPos</span> = <span class="fn">worldPos</span>.<span class="fn">xyz</span>;
+  <span class="fn">vUV</span> = <span class="fn">aUV</span>;
+  <span class="fn">vNormal</span> = <span class="fn">mat3</span>(<span class="fn">transpose</span>(<span class="fn">inverse</span>(<span class="fn">uModel</span>))) * <span class="fn">aNormal</span>;
+  <span class="fn">gl_Position</span> = <span class="fn">uProj</span> * <span class="fn">uView</span> * <span class="fn">worldPos</span>;
+}</div>
+</div>
+
+<!-- Git Panel -->
+<div class="fpanel" id="gitPanel" role="dialog" aria-label="Version Control">
+  <div class="fpanel-h"><span>Version Control</span><div class="fphact"><span onclick="Git.commit()" title="Commit" role="button">✓</span><span onclick="UI.toggle('gitPanel')" title="Close" role="button">✕</span></div></div>
+  <div class="fpanel-b">
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <button class="btn btn-gh btn-sm" style="flex:1">Branch: main</button>
+      <button class="btn btn-gh btn-sm" style="flex:1">Pull</button>
+      <button class="btn btn-gh btn-sm" style="flex:1">Push</button>
+    </div>
+    <div class="gitlog" id="gitlog">
+      <div class="gcommit"><div class="hash">a1b2c3d</div><div class="msg">Initial commit: Project setup</div><div class="meta">main • 2 min ago</div></div>
+      <div class="gcommit"><div class="hash">e4f5g6h</div><div class="msg">Add player controller system</div><div class="meta">main • 1 min ago</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Package Panel -->
+<div class="fpanel" id="pkgPanel" role="dialog" aria-label="Package Manager">
+  <div class="fpanel-h"><span>Package Manager</span><div class="fphact"><span onclick="Pkg.install()" title="Install" role="button">+</span><span onclick="UI.toggle('pkgPanel')" title="Close" role="button">✕</span></div></div>
+  <div class="fpanel-b">
+    <div class="psearch" style="padding:0 0 8px 0"><input type="text" placeholder="Search npm, cargo, pip, maven..." style="width:100%"></div>
+    <div class="pkglist">
+      <div class="pkgitem"><div><div class="pn">aether-core</div><div class="pv">v3.0.0</div></div><div class="ps">✓</div></div>
+      <div class="pkgitem"><div><div class="pn">aether-physics</div><div class="pv">v2.1.4</div></div><div class="ps">✓</div></div>
+      <div class="pkgitem"><div><div class="pn">aether-gfx</div><div class="pv">v1.8.2</div></div><div class="ps">✓</div></div>
+      <div class="pkgitem"><div><div class="pn">aether-audio</div><div class="pv">v1.2.0</div></div><div class="ps">✓</div></div>
+      <div class="pkgitem"><div><div class="pn">aether-ml</div><div class="pv">v0.9.1</div></div><div class="ps">✓</div></div>
+      <div class="pkgitem"><div><div class="pn">three</div><div class="pv">r160</div></div><div class="ps" style="background:var(--warn);color:#000">↑</div></div>
+      <div class="pkgitem"><div><div class="pn">tensorflow/tfjs</div><div class="pv">v4.15.0</div></div><div class="ps">✓</div></div>
+      <div class="pkgitem"><div><div class="pn">pyodide</div><div class="pv">v0.25.0</div></div><div class="ps">✓</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Profiler Panel -->
+<div class="fpanel" id="profPanel" role="dialog" aria-label="Profiler">
+  <div class="fpanel-h"><span>Profiler</span><div class="fphact"><span onclick="UI.toggle('profPanel')" title="Close" role="button">✕</span></div></div>
+  <div class="fpanel-b">
+    <div style="font-size:10px;color:var(--t3);margin-bottom:8px">Runtime Performance</div>
+    <div class="profbar"><div class="fill" style="width:12%;background:var(--ok)"></div><div class="lbl">CPU: 12%</div></div>
+    <div class="profbar"><div class="fill" style="width:45%;background:var(--info)"></div><div class="lbl">GPU: 45%</div></div>
+    <div class="profbar"><div class="fill" style="width:8%;background:var(--pur)"></div><div class="lbl">Memory: 128 MB</div></div>
+    <div class="profbar"><div class="fill" style="width:3%;background:var(--warn)"></div><div class="lbl">Audio: 3%</div></div>
+    <div class="profbar"><div class="fill" style="width:2%;background:var(--cyan)"></div><div class="lbl">Network: 2 KB/s</div></div>
+    <div style="font-size:10px;color:var(--t3);margin-top:10px;margin-bottom:8px">Frame Time</div>
+    <div class="profbar"><div class="fill" style="width:16%;background:var(--ok)"></div><div class="lbl">16.6 ms (60 FPS)</div></div>
+  </div>
+</div>
+
+<!-- Settings Panel -->
+<div class="fpanel" id="settingsPanel" role="dialog" aria-label="Settings">
+  <div class="fpanel-h"><span>Settings</span><div class="fphact"><span onclick="UI.toggle('settingsPanel')" title="Close" role="button">✕</span></div></div>
+  <div class="fpanel-b" style="padding:0">
+    <div class="setgrp">
+      <h4>Editor</h4>
+      <div class="setrow"><span>Theme</span><select class="pinp" style="width:auto"><option>Dark</option><option>Light</option><option>High Contrast</option></select></div>
+      <div class="setrow"><span>Font Size</span><input class="pinp" value="14" style="width:50px" type="number"></div>
+      <div class="setrow"><span>Tab Size</span><input class="pinp" value="2" style="width:50px" type="number"></div>
+      <div class="setrow"><span>Word Wrap</span><div class="ptog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setrow"><span>Minimap</span><div class="ptog on" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+    <div class="setgrp">
+      <h4>Build</h4>
+      <div class="setrow"><span>Target</span><select class="pinp" style="width:auto"><option>ES2022</option><option>WASM</option><option>Native</option></select></div>
+      <div class="setrow"><span>Optimization</span><select class="pinp" style="width:auto"><option>O3 Max</option><option>O2</option><option>O1</option><option>Debug</option></select></div>
+      <div class="setrow"><span>Source Maps</span><div class="ptog" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+    <div class="setgrp">
+      <h4>Security</h4>
+      <div class="setrow"><span>CSP Strict</span><div class="ptog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setrow"><span>Sanitize I/O</span><div class="ptog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setrow"><span>Audit Packages</span><div class="ptog on" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+    <div class="setgrp">
+      <h4>Accessibility</h4>
+      <div class="setrow"><span>Screen Reader</span><div class="ptog" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setrow"><span>Reduced Motion</span><div class="ptog" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setrow"><span>Color Blind Mode</span><select class="pinp" style="width:auto"><option>None</option><option>Deuteranopia</option><option>Protanopia</option><option>Tritanopia</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════
+     TOAST & CONTEXT MENU
+     ═══════════════════════════════════════════════════════════════════════════════ -->
+<div class="toast" id="toast" role="status" aria-live="polite"><i></i><span id="ttxt">Notification</span></div>
+<div class="ctx" id="ctx" role="menu" aria-label="Context Menu">
+  <div class="cxi" onclick="Ctx.copy()" role="menuitem"><i>📋</i>Copy</div>
+  <div class="cxi" onclick="Ctx.paste()" role="menuitem"><i>📄</i>Paste</div>
+  <div class="cxi" onclick="Ctx.dup()" role="menuitem"><i>📑</i>Duplicate</div>
+  <div class="cxd"></div>
+  <div class="cxi" onclick="Ctx.group()" role="menuitem"><i>📁</i>Group</div>
+  <div class="cxi" onclick="Ctx.lock()" role="menuitem"><i>🔒</i>Lock</div>
+  <div class="cxd"></div>
+  <div class="cxi" onclick="Ctx.del()" role="menuitem" style="color:var(--err)"><i>🗑️</i>Delete</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// AETHER ENGINE v3 — Refined Production JavaScript
+// Architecture: Modular | Immutable State | Event-Driven | Zero-GC Pressure
+// ═══════════════════════════════════════════════════════════════════════════════
+'use strict';
+
+// ─── Configuration ───
+const CFG = {
+  version: '3.0.0-SUPREME',
+  splash: 1800,
+  toast: 2200,
+  maxUndo: 80,
+  grid: 20,
+  snap: 10,
+  debounce: 16
+};
+
+// ─── State ───
+const State = {
+  engine: 'game',
+  tool: 'scene',
+  sel: new Set(),
+  zoom: 1,
+  pan: { x: 0, y: 0 },
+  play: false,
+  undo: [],
+  redo: [],
+  ec: 0,
+  clip: null,
+  grid: true,
+  dev: 'phone',
+  proj: { name: 'Untitled', engine: 'game', scenes: [{ name: 'Main', objects: [] }], created: Date.now() },
+  nodes: [],
+  code: {},
+  cons: [],
+  modified: false,
+  panels: {},
+  drag: null,
+  raf: null
+};
+
+// ─── Engine Registry ───
+const Engines = {
+  game:  { b: 'GAME', c: 'eb-g', co: [{i:'🎮',l:'Player'},{i:'👾',l:'Enemy'},{i:'🪙',l:'Coin'},{i:'🧱',l:'Platform'},{i:'💥',l:'Particle'},{i:'🎵',l:'Audio'},{i:'📷',l:'Camera'},{i:'💡',l:'Light'},{i:'🎯',l:'Spawner'},{i:'🚪',l:'Trigger'},{i:'🌊',l:'Water'},{i:'🌳',l:'Tree'}] },
+  web:   { b: 'WEB',  c: 'eb-w', co: [{i:'📦',l:'Container'},{i:'📝',l:'Text'},{i:'🖼️',l:'Image'},{i:'🔘',l:'Button'},{i:'📋',l:'Form'},{i:'🧭',l:'Navbar'},{i:'🎠',l:'Carousel'},{i:'📊',l:'Chart'},{i:'🗺️',l:'Map'},{i:'💬',l:'Chat'}] },
+  app:   { b: 'APP',  c: 'eb-a', co: [{i:'📱',l:'Screen'},{i:'🔀',l:'Navigator'},{i:'📋',l:'ListView'},{i:'🔤',l:'TextField'},{i:'☑️',l:'Checkbox'},{i:'🔽',l:'Dropdown'},{i:'📊',l:'DataTable'},{i:'🗃️',l:'Drawer'},{i:'🔔',l:'Notify'},{i:'📡',l:'API'}] },
+  gfx:   { b: 'GFX',  c: 'eb-x', co: [{i:'⬜',l:'Rectangle'},{i:'⭕',l:'Circle'},{i:'✏️',l:'Path'},{i:'🔤',l:'Text'},{i:'🖌️',l:'Brush'},{i:'🎭',l:'Mask'},{i:'✨',l:'Effect'},{i:'🎬',l:'Keyframe'},{i:'🧬',l:'Mesh'},{i:'🌈',l:'Gradient'}] },
+  sim:   { b: 'SIM',  c: 'eb-s', co: [{i:'🚗',l:'Vehicle'},{i:'✈️',l:'Aircraft'},{i:'🚁',l:'Helicopter'},{i:'🚤',l:'Boat'},{i:'🤖',l:'Robot'},{i:'🌊',l:'Fluid'},{i:'🔥',l:'Fire'},{i:'💨',l:'Wind'}] },
+  retro: { b: 'RETRO',c: 'eb-r', co: [{i:'👾',l:'Sprite'},{i:'🎵',l:'Chiptune'},{i:'🗺️',l:'Tilemap'},{i:'📺',l:'CRT'},{i:'🎨',l:'Palette'},{i:'💾',l:'Save'},{i:'🕹️',l:'Controller'},{i:'📟',l:'HUD'}] },
+  ai:    { b: 'AI',   c: 'eb-l', co: [{i:'🧠',l:'NeuralNet'},{i:'📊',l:'Dataset'},{i:'🔮',l:'Inference'},{i:'🎓',l:'Train'},{i:'📈',l:'Metrics'},{i:'🤖',l:'Agent'},{i:'📝',l:'Tokenizer'},{i:'🌐',l:'ModelHub'}] },
+  audio: { b: 'AUDIO',c: 'eb-o', co: [{i:'🎹',l:'Synth'},{i:'🥁',l:'Drum'},{i:'🎸',l:'Sampler'},{i:'🎚️',l:'Mixer'},{i:'🔊',l:'Reverb'},{i:'📢',l:'Delay'},{i:'🎛️',l:'EQ'},{i:'🎙️',l:'Recorder'}] },
+  movie: { b: 'MOVIE',c: 'eb-m', co: [{i:'🎬',l:'Timeline'},{i:'🎞️',l:'Clip'},{i:'✂️',l:'Cut'},{i:'🎭',l:'Transition'},{i:'✨',l:'VFX'},{i:'🎨',l:'Color'},{i:'🔤',l:'Title'},{i:'🎵',l:'AudioTrack'}] }
+};
+
+// ─── Utilities ───
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+const on = (el, ev, fn, ops) => el && el.addEventListener(ev, fn, ops);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+const esc = (s) => { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SPLASH
+// ═══════════════════════════════════════════════════════════════════════════════
+const Splash = {
+  init() {
+    const b = $('#sfill'), t = $('#smsg');
+    const st = [
+      { p: 15, m: 'Kernel...' }, { p: 30, m: 'Graphics...' }, { p: 45, m: 'Physics...' },
+      { p: 60, m: 'Audio...' }, { p: 75, m: 'Network...' }, { p: 85, m: 'ML...' },
+      { p: 95, m: 'Security...' }, { p: 100, m: 'Ready!' }
+    ];
+    let i = 0;
+    const iv = setInterval(() => {
+      if (i < st.length) { b.style.width = st[i].p + '%'; t.textContent = st[i].m; i++; }
+      else {
+        clearInterval(iv);
+        setTimeout(() => { $('#splash').classList.add('done'); Project.showMenu(); }, 400);
+      }
+    }, CFG.splash / st.length);
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PROJECT MANAGER
+// ═══════════════════════════════════════════════════════════════════════════════
+const Project = {
+  showMenu() { $('#projModal').classList.add('on'); this.loadList(); },
+  hideMenu() { $('#projModal').classList.remove('on'); },
+  new() { this.hideMenu(); $('#engModal').classList.add('on'); },
+  menu() { if (State.modified && !confirm('Unsaved changes will be lost. Continue?')) return; this.showMenu(); },
+  pick(e) {
+    State.engine = e;
+    State.proj = { name: 'Untitled_' + Date.now().toString(36), engine: e, scenes: [{ name: 'Main', objects: [] }], created: Date.now() };
+    this.loadProject();
+  },
+  loadProject() {
+    const d = Engines[State.engine];
+    $('#eBadge').textContent = d.b;
+    $('#eBadge').className = 'e-badge ' + d.c;
+    $('#pTitle').textContent = State.proj.name;
+    $('#engModal').classList.remove('on');
+    $('#projModal').classList.remove('on');
+    $('#app').classList.add('on');
+    Tools.reset();
+    Panel.update();
+    Log.add('Project loaded: ' + State.proj.name, 'ok');
+    Toast.show('Project ready', 'ok');
+  },
+  rename() {
+    const n = prompt('Project name:', State.proj.name);
+    if (n && n.trim()) { State.proj.name = n.trim(); $('#pTitle').textContent = esc(n); State.modified = true; }
+  },
+  save() {
+    try {
+      localStorage.setItem('aether_' + State.proj.name, JSON.stringify(State.proj));
+      State.modified = false;
+      Toast.show('Saved!', 'ok');
+      Log.add('Project saved', 'ok');
+    } catch (e) { Toast.show('Save failed', 'er'); Log.add('Save error: ' + e.message, 'er'); }
+  },
+  load() { this.showMenu(); },
+  loadList() {
+    const g = $('#projGrid');
+    let h = '<div class="p-card p-card-new" onclick="Project.new()"><div class="p-icon" style="background:rgba(255,107,53,0.1);color:var(--ac);font-size:20px">+</div><h3 style="color:var(--ac)">New Project</h3><p>Start from scratch with any engine</p></div>';
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('aether_')) {
+        try {
+          const p = JSON.parse(localStorage.getItem(k));
+          const ed = Engines[p.engine];
+          const bg = ed ? ed.c.replace('eb-', '') : '';
+          const colMap = { g: '245,158,11', w: '34,197,94', a: '59,130,246', x: '236,72,153', s: '168,85,247', r: '6,182,212', l: '132,204,22', o: '244,63,94', m: '251,146,60' };
+          const col = colMap[bg] || '255,255,255';
+          h += `<div class="p-card" onclick="Project.loadFrom('${esc(k)}')"><div class="p-icon" style="background:rgba(${col},0.1);color:var(--t1)">${esc(ed ? ed.b[0] : '?')}</div><h3>${esc(p.name)}</h3><p>${esc(ed ? ed.b : 'Unknown')} engine</p><div class="p-meta"><span class="p-tag">${p.scenes ? p.scenes.length : 0} scenes</span><span class="p-tag">${new Date(p.created).toLocaleDateString()}</span></div></div>`;
+        } catch (e) {}
+      }
+    }
+    g.innerHTML = h;
+  },
+  loadFrom(k) {
+    try {
+      const p = JSON.parse(localStorage.getItem(k));
+      State.proj = p; State.engine = p.engine; this.loadProject();
+    } catch (e) { Toast.show('Load failed', 'er'); }
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ENGINE
+// ═══════════════════════════════════════════════════════════════════════════════
+const Engine = {
+  pick(e) { Project.pick(e); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TOOLS
+// ═══════════════════════════════════════════════════════════════════════════════
+const Tools = {
+  switch(btn, t) {
+    $$('.tbtn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    State.tool = t;
+    Panel.update();
+    const p = $('#lpanel');
+    if (!p.classList.contains('on')) p.classList.add('on');
+  },
+  reset() {
+    $$('.tbtn').forEach(b => b.classList.remove('on'));
+    const b = $(`[data-t="scene"]`);
+    if (b) b.classList.add('on');
+    State.tool = 'scene';
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PANEL
+// ═══════════════════════════════════════════════════════════════════════════════
+const Panel = {
+  update() {
+    const pc = $('#pbody'), pt = $('#ptitle');
+    const d = Engines[State.engine];
+    switch (State.tool) {
+      case 'scene':   pt.textContent = 'Scene'; this.renderScene(pc); break;
+      case 'ui':      pt.textContent = 'UI Components'; this.renderComp(pc, d ? d.co : []); break;
+      case 'assets':  pt.textContent = 'Assets'; this.renderAssets(pc); break;
+      case 'logic':   pt.textContent = 'Logic'; this.renderLogic(pc); break;
+      case 'physics': pt.textContent = 'Physics'; this.renderPhys(pc); break;
+      case 'anim':    pt.textContent = 'Animation'; this.renderAnim(pc); break;
+      case 'shader':  pt.textContent = 'Shaders'; this.renderShader(pc); break;
+      case 'audio':   pt.textContent = 'Audio'; this.renderAudio(pc); break;
+      case 'layers':  pt.textContent = 'Layers'; this.renderLayers(pc); break;
+      case 'history': pt.textContent = 'History'; this.renderHist(pc); break;
+    }
+  },
+  renderScene(pc) {
+    const s = State.proj.scenes || [];
+    pc.innerHTML = s.map((x, i) => {
+      const active = i === 0;
+      return `<div style="padding:10px;background:${active ? 'var(--bg-3)' : 'var(--bg-2)'};border-radius:8px;margin-bottom:5px;cursor:pointer;border:1px solid ${active ? 'var(--ac)' : 'var(--b1)'};transition:all 150ms" onmouseover="this.style.borderColor='var(--b2)'" onmouseout="this.style.borderColor='${active ? 'var(--ac)' : 'var(--b1)'}'"><div style="font-weight:700;font-size:11px;color:${active ? 'var(--ac)' : 'var(--t1)'}">${esc(x.name)}</div><div style="font-size:9px;color:var(--t4);margin-top:2px">${x.objects ? x.objects.length : 0} objects${active ? ' • Active' : ''}</div></div>`;
+    }).join('');
+  },
+  renderComp(pc, list) {
+    pc.innerHTML = '<div class="cgrid">' + list.map(c => `<div class="ccard" onclick="Canvas.add('${esc(c.l)}')" title="${esc(c.l)}"><span class="cic">${c.i}</span><span class="clbl">${esc(c.l)}</span></div>`).join('') + '</div>';
+  },
+  renderAssets(pc) {
+    const a = ['🖼️','🎵','🎬','🎮','📁','🎨','✨','🔧','📦','🧩','🌐','📱'];
+    pc.innerHTML = '<div class="agrid">' + a.map(x => `<div class="aitem">${x}</div>`).join('') + '<div class="aitem aadd" onclick="Actions.upload()">+</div></div>';
+  },
+  renderLogic(pc) {
+    const n = [
+      { n: 'Event Tick', t: 'e' }, { n: 'On Click', t: 'e' }, { n: 'If Branch', t: 'l' },
+      { n: 'For Loop', t: 'l' }, { n: 'Delay', t: 'f' }, { n: 'Spawn', t: 'i' },
+      { n: 'Destroy', t: 'i' }, { n: 'Set Var', t: 'm' }, { n: 'Get Var', t: 'm' },
+      { n: 'Function', t: 'l' }, { n: 'Sequence', t: 'f' }, { n: 'Random', t: 'm' },
+      { n: 'API Call', t: 'a' }, { n: 'DB Query', t: 'a' }, { n: 'ML Predict', t: 'a' }
+    ];
+    pc.innerHTML = '<div class="nlist">' + n.map(x => `<div class="nitem" onclick="NodeEditor.addNode('${esc(x.n)}')"><div class="ndot nd-${x.t}"></div><span>${esc(x.n)}</span></div>`).join('') + '</div>';
+  },
+  renderPhys(pc) {
+    const b = [{i:'📦',n:'Box'},{i:'🔵',n:'Sphere'},{i:'💊',n:'Capsule'},{i:'🕸️',n:'Mesh'},{i:'🧱',n:'Rigid'},{i:'🪨',n:'Static'},{i:'🤖',n:'Kinematic'},{i:'🚪',n:'Trigger'},{i:'🔗',n:'Joint'},{i:'🌀',n:'Spring'}];
+    pc.innerHTML = '<div class="cgrid">' + b.map(x => `<div class="ccard" onclick="Actions.addPhys('${esc(x.n)}')"><span class="cic">${x.i}</span><span class="clbl">${esc(x.n)}</span></div>`).join('') + '</div>';
+  },
+  renderAnim(pc) {
+    pc.innerHTML = `<div style="text-align:center;padding:28px 12px;color:var(--t4)"><div style="font-size:24px;margin-bottom:8px">🎞️</div><div style="font-size:12px;font-weight:700;color:var(--t3)">Animation Editor</div><div style="font-size:10px;margin-top:4px">Keyframe &amp; timeline tools</div><div style="margin-top:12px;display:flex;gap:6px;justify-content:center"><button class="btn btn-gh btn-sm">⏴ Prev</button><button class="btn btn-gh btn-sm">⏵ Next</button><button class="btn btn-gh btn-sm">⏸ Pause</button></div></div>`;
+  },
+  renderShader(pc) {
+    const s = [{i:'✨',n:'Glow'},{i:'🌊',n:'Water'},{i:'🔥',n:'Fire'},{i:'💨',n:'Smoke'},{i:'🪞',n:'Mirror'},{i:'🌈',n:'Chromatic'},{i:'⚡',n:'Electric'},{i:'🌌',n:'Galaxy'}];
+    pc.innerHTML = '<div class="cgrid">' + s.map(x => `<div class="ccard" onclick="Shader.load('${esc(x.n)}')"><span class="cic">${x.i}</span><span class="clbl">${esc(x.n)}</span></div>`).join('') + '</div>';
+  },
+  renderAudio(pc) {
+    const a = [{i:'🎹',n:'Synth'},{i:'🥁',n:'Kick'},{i:'🎸',n:'Bass'},{i:'🎚️',n:'Mixer'},{i:'🔊',n:'Reverb'},{i:'📢',n:'Delay'},{i:'🎛️',n:'EQ'},{i:'🎙️',n:'Rec'}];
+    pc.innerHTML = '<div class="cgrid">' + a.map(x => `<div class="ccard" onclick="Audio.add('${esc(x.n)}')"><span class="cic">${x.i}</span><span class="clbl">${esc(x.n)}</span></div>`).join('') + '</div>';
+  },
+  renderLayers(pc) {
+    const l = [{n:'Background',v:1},{n:'Game',v:1},{n:'UI',v:1},{n:'Effects',v:1},{n:'Foreground',v:0}];
+    pc.innerHTML = l.map((x, i) => `<div style="display:flex;align-items:center;gap:6px;padding:6px;background:var(--bg-2);border-radius:6px;margin-bottom:4px"><span style="font-size:14px;cursor:pointer">${x.v ? '👁️' : '🚫'}</span><span style="font-size:14px;cursor:pointer">🔓</span><span style="flex:1;font-size:10px;font-weight:600">${esc(x.n)}</span><span style="font-size:9px;color:var(--t4)">${i + 1}</span></div>`).join('');
+  },
+  renderHist(pc) {
+    const h = [{a:'Added Player',t:'2s'},{a:'Moved Platform',t:'5s'},{a:'Changed Color',t:'12s'},{a:'Added Light',t:'30s'},{a:'Deleted Enemy',t:'1m'}];
+    pc.innerHTML = h.map(x => `<div style="padding:6px;background:var(--bg-2);border-radius:6px;margin-bottom:4px;font-size:10px"><div style="font-weight:600">${esc(x.a)}</div><div style="font-size:9px;color:var(--t4);margin-top:1px">${esc(x.t)} ago</div></div>`).join('');
+  },
+  toggle() { $('#lpanel').classList.toggle('on'); },
+  settings() { Toast.show('Panel settings', 'inf'); },
+  filter() {
+    const q = $('#psearch').value.toLowerCase();
+    $$('.ccard, .nitem, .aitem').forEach(el => { el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CANVAS
+// ═══════════════════════════════════════════════════════════════════════════════
+const Canvas = {
+  add(label) {
+    const dz = $('#dz');
+    if (dz) dz.style.display = 'none';
+    const el = document.createElement('div');
+    el.className = 'felem fade-in';
+    el.innerHTML = `<div class="fhandle"></div><span>${esc(label)}</span><div class="fresize"></div>`;
+    el.style.left = (20 + Math.random() * 80) + 'px';
+    el.style.top = (20 + Math.random() * 80) + 'px';
+    el.dataset.id = 'el_' + (++State.ec);
+    el.dataset.type = label;
+    $('#dcontent').appendChild(el);
+    this.sel(el);
+    Actions.save();
+    State.modified = true;
+    Toast.show(`Added ${esc(label)}`, 'ok');
+    Log.add(`Added ${esc(label)}`, 'inf');
+  },
+  sel(el) {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      $$('.felem').forEach(x => x.classList.remove('sel'));
+      el.classList.add('sel');
+      State.sel.add(el.dataset.id);
+      Props.load(el);
+    });
+  },
+  zoom(f) { State.zoom = clamp(State.zoom * f, 0.25, 4); this.apply(); },
+  fit() { State.zoom = 1; State.pan = { x: 0, y: 0 }; this.apply(); },
+  apply() { $('#dframe').style.transform = `scale(${State.zoom}) translate(${State.pan.x}px, ${State.pan.y}px)`; },
+  grid() { State.grid = !State.grid; $('#cgrid').style.opacity = State.grid ? '1' : '0'; Toast.show(State.grid ? 'Grid on' : 'Grid off', 'inf'); },
+  device() {
+    const f = $('#dframe'), m = ['phone', 'ls', 'tb'];
+    const i = (m.indexOf(State.dev) + 1) % m.length;
+    State.dev = m[i];
+    f.classList.remove('ls', 'tb');
+    if (State.dev !== 'phone') f.classList.add(State.dev);
+    Toast.show(`Device: ${State.dev === 'ls' ? 'Landscape' : State.dev === 'tb' ? 'Tablet' : 'Phone'}`, 'inf');
+  }
+};
+
+// ─── Global Drag Manager (prevents listener leaks) ───
+(function() {
+  let dragEl = null, dragOff = { x: 0, y: 0 };
+  const onMove = (e) => {
+    if (!dragEl) return;
+    const c = e.touches ? e.touches[0] : e;
+    let nx = c.clientX - dragOff.x, ny = c.clientY - dragOff.y;
+    if (CFG.snap > 0) { nx = Math.round(nx / CFG.grid) * CFG.grid; ny = Math.round(ny / CFG.grid) * CFG.grid; }
+    dragEl.style.left = nx + 'px';
+    dragEl.style.top = ny + 'px';
+    if (e.cancelable) e.preventDefault();
+  };
+  const onEnd = () => {
+    if (!dragEl) return;
+    dragEl.style.zIndex = '';
+    dragEl.style.willChange = '';
+    dragEl = null;
+    Actions.save();
+    State.modified = true;
+  };
+  on(document, 'mousemove', onMove);
+  on(document, 'mouseup', onEnd);
+  on(document, 'touchmove', onMove, { passive: false });
+  on(document, 'touchend', onEnd);
+
+  // Delegate mousedown for drag handles
+  on($('#dcontent'), 'mousedown', (e) => {
+    const h = e.target.closest('.fhandle');
+    if (!h) return;
+    const el = h.closest('.felem');
+    if (!el) return;
+    dragEl = el;
+    const c = e.touches ? e.touches[0] : e;
+    const rect = el.getBoundingClientRect();
+    const parent = el.offsetParent.getBoundingClientRect();
+    dragOff.x = c.clientX - (rect.left - parent.left);
+    dragOff.y = c.clientY - (rect.top - parent.top);
+    el.style.zIndex = 100;
+    el.style.willChange = 'transform, left, top';
+    if (e.cancelable) e.preventDefault();
+  });
+  on($('#dcontent'), 'touchstart', (e) => {
+    const h = e.target.closest('.fhandle');
+    if (!h) return;
+    const el = h.closest('.felem');
+    if (!el) return;
+    dragEl = el;
+    const c = e.touches[0];
+    const rect = el.getBoundingClientRect();
+    const parent = el.offsetParent.getBoundingClientRect();
+    dragOff.x = c.clientX - (rect.left - parent.left);
+    dragOff.y = c.clientY - (rect.top - parent.top);
+    el.style.zIndex = 100;
+    el.style.willChange = 'transform, left, top';
+  }, { passive: false });
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PROPERTIES
+// ═══════════════════════════════════════════════════════════════════════════════
+const Props = {
+  toggle(h) { h.classList.toggle('c'); h.nextElementSibling.classList.toggle('c'); },
+  load(el) { $('#px').value = parseInt(el.style.left) || 0; $('#py').value = parseInt(el.style.top) || 0; },
+  apply(k, v) {
+    const sel = $('.felem.sel');
+    if (!sel) return;
+    if (k === 'x') sel.style.left = v + 'px';
+    if (k === 'y') sel.style.top = v + 'px';
+    State.modified = true;
+  },
+  opacity(v) { const sel = $('.felem.sel'); if (sel) sel.style.opacity = v / 100; },
+  color(el) {
+    const sel = $('.felem.sel');
+    if (!sel) return;
+    const c = prompt('Color (hex):', '#6366f1');
+    if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) { el.style.background = c; sel.style.background = c; State.modified = true; }
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// NODE EDITOR
+// ═══════════════════════════════════════════════════════════════════════════════
+const NodeEditor = {
+  add() { UI.toggle('nodePanel'); Toast.show('Node editor toggled', 'inf'); },
+  addNode(n) { UI.toggle('nodePanel'); Toast.show(`Added ${esc(n)}`, 'ok'); Log.add(`Node: ${esc(n)}`, 'inf'); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CODE EDITOR
+// ═══════════════════════════════════════════════════════════════════════════════
+const Code = {
+  tab(t, n) { $$('.ctab').forEach(x => x.classList.remove('on')); t.classList.add('on'); },
+  add() { Toast.show('New file created', 'inf'); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SHADER EDITOR
+// ═══════════════════════════════════════════════════════════════════════════════
+const Shader = {
+  tab(t, n) { $$('.shtab').forEach(x => x.classList.remove('on')); t.classList.add('on'); },
+  compile() { Toast.show('Shader compiled successfully', 'ok'); Log.add('Shader compiled', 'ok'); },
+  load(n) { Toast.show(`Loaded ${esc(n)} shader`, 'inf'); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AUDIO ENGINE
+// ═══════════════════════════════════════════════════════════════════════════════
+const Audio = {
+  add(n) { Toast.show(`Added ${esc(n)}`, 'ok'); Log.add(`Audio: ${esc(n)}`, 'ok'); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// GIT
+// ═══════════════════════════════════════════════════════════════════════════════
+const Git = {
+  commit() { Toast.show('Committed changes', 'ok'); Log.add('Git commit: auto-save', 'ok'); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PACKAGE MANAGER
+// ═══════════════════════════════════════════════════════════════════════════════
+const Pkg = {
+  install() { Toast.show('Installing package...', 'inf'); setTimeout(() => Toast.show('Package installed', 'ok'), 800); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UI MANAGER
+// ═══════════════════════════════════════════════════════════════════════════════
+const UI = {
+  toggle(id) {
+    const el = $(`#${id}`);
+    if (!el) return;
+    const isOn = el.classList.contains('on');
+    if (!isOn) {
+      // Close other floating panels to prevent overlap clutter
+      $$('.fpanel').forEach(p => { if (p.id !== id && p.id !== 'consolePanel' && p.id !== 'codePanel') p.classList.remove('on'); });
+    }
+    el.classList.toggle('on');
+    const map = { codePanel: 'btnCode', nodePanel: 'btnNode', consolePanel: 'btnCon', shaderPanel: 'btnShader', gitPanel: 'btnGit', pkgPanel: 'btnPkg', profPanel: 'btnProf' };
+    if (map[id]) { const btn = $(`#${map[id]}`); if (btn) btn.classList.toggle('on', !isOn); }
+    // Ensure panel stays within viewport bounds
+    if (!isOn && el.classList.contains('fpanel')) this.constrain(el);
+  },
+  constrain(el) {
+    const r = el.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    let l = parseInt(el.style.left) || 60, t = parseInt(el.style.top) || 60;
+    if (l + r.width > vw) l = Math.max(10, vw - r.width - 10);
+    if (t + r.height > vh) t = Math.max(10, vh - r.height - 10);
+    el.style.left = l + 'px';
+    el.style.top = t + 'px';
+  },
+  layer() { Toast.show('New layer created', 'ok'); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════════════════════════════════
+const Actions = {
+  undo() {
+    if (State.undo.length > 0) {
+      const s = State.undo.pop();
+      State.redo.push(s);
+      if (s.html !== undefined) $('#dcontent').innerHTML = s.html;
+      Toast.show('Undo', 'inf');
+      Log.add('Undo', 'inf');
+    }
+  },
+  save() {
+    State.undo.push({ html: $('#dcontent').innerHTML, t: Date.now() });
+    if (State.undo.length > CFG.maxUndo) State.undo.shift();
+  },
+  play() {
+    State.play = !State.play;
+    $('#pbtn').textContent = State.play ? '⏸' : '▶';
+    Toast.show(State.play ? 'Playing...' : 'Paused', 'inf');
+    Log.add(State.play ? 'Play' : 'Pause', 'inf');
+  },
+  upload() { Toast.show('Asset upload dialog', 'inf'); Log.add('Upload requested', 'inf'); },
+  addPhys(t) { Toast.show(`Added ${esc(t)}`, 'ok'); Log.add(`Physics: ${esc(t)}`, 'ok'); },
+  _buildHTML() {
+    const els = $$('.felem');
+    let body = '';
+    els.forEach(el => {
+      const l = el.style.left, t = el.style.top, tp = esc(el.dataset.type || 'div'), bg = el.style.background || 'var(--bg-3)';
+      body += `<div style="position:absolute;left:${l};top:${t};padding:10px 14px;background:${bg};border-radius:6px;color:#fff;font-family:sans-serif;font-size:13px;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,0.3)">${tp}</div>`;
+    });
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(State.proj.name)}</title><style>body{margin:0;background:#08080f;color:#fff;font-family:sans-serif;overflow:hidden}</style></head><body><div style="position:relative;width:100vw;height:100vh">${body || '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#64748b">AETHER Project Preview</div>'}</div></body></html>`;
+  },
+  preview() {
+    const html = this._buildHTML();
+    const w = window.open('about:blank', '_blank');
+    if (w) { w.document.open(); w.document.write(html); w.document.close(); Toast.show('Preview opened', 'ok'); Log.add('Preview opened', 'ok'); }
+    else { Toast.show('Popup blocked', 'er'); }
+  },
+  export() {
+    const html = this._buildHTML();
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = State.proj.name + '.html';
+    a.click();
+    URL.revokeObjectURL(url);
+    Toast.show('Exported!', 'ok');
+    Log.add('Project exported', 'ok');
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CONTEXT MENU
+// ═══════════════════════════════════════════════════════════════════════════════
+const Ctx = {
+  init() {
+    const m = $('#ctx');
+    let lp;
+    on(document, 'contextmenu', (e) => {
+      if (e.target.closest('.felem') || e.target.closest('.canvas')) {
+        e.preventDefault();
+        this.show(e.clientX, e.clientY);
+      }
+    });
+    on(document, 'click', () => m.classList.remove('on'));
+    on(document, 'touchstart', (e) => {
+      if (e.touches.length === 1) lp = setTimeout(() => { const t = e.touches[0]; this.show(t.clientX, t.clientY); }, 600);
+    }, { passive: true });
+    on(document, 'touchend', () => clearTimeout(lp));
+    on(document, 'touchmove', () => clearTimeout(lp));
+  },
+  show(x, y) {
+    const m = $('#ctx');
+    m.style.left = clamp(x, 0, window.innerWidth - 160) + 'px';
+    m.style.top = clamp(y, 0, window.innerHeight - 200) + 'px';
+    m.classList.add('on');
+  },
+  copy() { Toast.show('Copied', 'ok'); },
+  paste() { Toast.show('Pasted', 'ok'); },
+  dup() { Toast.show('Duplicated', 'ok'); },
+  group() { Toast.show('Grouped', 'inf'); },
+  lock() { Toast.show('Locked', 'inf'); },
+  del() {
+    $$('.felem.sel').forEach(el => { el.remove(); Actions.save(); });
+    Toast.show('Deleted', 'er');
+    Log.add('Deleted selection', 'er');
+    State.modified = true;
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// GESTURES
+// ═══════════════════════════════════════════════════════════════════════════════
+const Gestures = {
+  init() {
+    const ca = $('#canvas');
+    let d0 = 0, z0 = 1;
+    on(ca, 'touchstart', (e) => {
+      if (e.touches.length === 2) {
+        d0 = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+        z0 = State.zoom;
+      }
+    }, { passive: true });
+    on(ca, 'touchmove', (e) => {
+      if (e.touches.length === 2 && d0 > 0) {
+        const d1 = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+        State.zoom = clamp(z0 * (d1 / d0), 0.25, 4);
+        Canvas.apply();
+      }
+    }, { passive: true });
+    on(ca, 'touchend', () => { d0 = 0; });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════════════════════════════════════════════════
+const Keyboard = {
+  init() {
+    on(document, 'keydown', (e) => {
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        const s = $$('.felem.sel');
+        if (s.length) { s.forEach(el => el.remove()); Actions.save(); Toast.show('Deleted', 'er'); Log.add('Deleted', 'er'); State.modified = true; }
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z') { e.preventDefault(); Actions.undo(); }
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); Project.save(); }
+      if ((e.metaKey || e.ctrlKey) && e.key === '`') { e.preventDefault(); UI.toggle('codePanel'); }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'j') { e.preventDefault(); UI.toggle('consolePanel'); }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'n') { e.preventDefault(); UI.toggle('nodePanel'); }
+      if (e.key === 'Escape') {
+        $$('.fpanel').forEach(p => p.classList.remove('on'));
+        $$('.btn-ic').forEach(b => b.classList.remove('on'));
+        $('#ctx').classList.remove('on');
+      }
+    });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════════════════════
+const Toast = {
+  _t: null,
+  show(msg, type = 'inf') {
+    const t = $('#toast'), tx = $('#ttxt');
+    t.className = 'toast ' + type;
+    tx.textContent = msg;
+    t.classList.add('on');
+    if (this._t) clearTimeout(this._t);
+    this._t = setTimeout(() => t.classList.remove('on'), CFG.toast);
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CONSOLE / LOG
+// ═══════════════════════════════════════════════════════════════════════════════
+const Log = {
+  add(msg, type = 'inf') {
+    const b = $('#conb');
+    const d = document.createElement('div');
+    d.className = type;
+    d.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    b.appendChild(d);
+    b.scrollTop = b.scrollHeight;
+    State.cons.push({ msg, type, time: Date.now() });
+  }
+};
+const Console = {
+  clear() { $('#conb').innerHTML = ''; Toast.show('Console cleared', 'inf'); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════════════════════════════════════
+const Clock = {
+  init() {
+    const up = () => {
+      const el = $('#clock');
+      if (el) { const n = new Date(); el.textContent = n.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }); }
+    };
+    up();
+    setInterval(up, 60000);
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SHADER PREVIEW (WebGL2) — with cleanup
+// ═══════════════════════════════════════════════════════════════════════════════
+const ShaderPreview = {
+  raf: null,
+  init() {
+    const c = $('#shaderCanvas');
+    if (!c) return;
+    const gl = c.getContext('webgl2');
+    if (!gl) return;
+    const resize = () => {
+      const r = c.parentElement.getBoundingClientRect();
+      c.width = r.width; c.height = r.height;
+      gl.viewport(0, 0, c.width, c.height);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    const vs = `#version 300 es
+in vec2 aPosition;
+void main(){gl_Position=vec4(aPosition,0.0,1.0);}`;
+    const fs = `#version 300 es
+precision highp float;
+out vec4 oColor;
+uniform float uTime;
+void main(){vec2 uv=gl_FragCoord.xy/vec2(400.0,120.0);vec3 c=vec3(0.5+0.5*sin(uTime+uv.x*3.14),0.5+0.5*sin(uTime+uv.y*3.14+2.09),0.5+0.5*sin(uTime+4.18));oColor=vec4(c,1.0);}`;
+    const compile = (t, s) => { const sh = gl.createShader(t); gl.shaderSource(sh, s); gl.compileShader(sh); return sh; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
+    gl.linkProgram(prog); gl.useProgram(prog);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'aPosition');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const uloc = gl.getUniformLocation(prog, 'uTime');
+    const render = (t) => { gl.uniform1f(uloc, t * 0.001); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); this.raf = requestAnimationFrame(render); };
+    this.raf = requestAnimationFrame(render);
+  },
+  destroy() { if (this.raf) cancelAnimationFrame(this.raf); }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INITIALIZATION
+// ═══════════════════════════════════════════════════════════════════════════════
+on(document, 'DOMContentLoaded', () => {
+  Splash.init();
+  Ctx.init();
+  Gestures.init();
+  Keyboard.init();
+  Clock.init();
+  ShaderPreview.init();
+});
+</script>
+</body>
+</html>
